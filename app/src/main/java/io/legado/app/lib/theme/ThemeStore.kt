@@ -243,16 +243,8 @@ private constructor(private val mContext: Context) : ThemeStoreInterface {
         @CheckResult
         @ColorInt
         fun textColorPrimary(context: Context): Int {
-            // 修改说明：实时解析，暗色模式浅字、浅色模式深字
-            return ContextCompat.getColor(
-                context,
-                if (context.isDarkTheme) R.color.md_light_primary_text else R.color.md_dark_primary_text
-            )
-        }
-
-        @CheckResult
-        @ColorInt
-        fun textColorPrimaryInverse(context: Context): Int {
+            // 修改说明：实时解析；修正分支颠倒——暗色模式返回浅色文字（白），
+            // 浅色模式返回深色文字（黑），与 MaterialValueHelper.getPrimaryTextColor 语义统一
             return ContextCompat.getColor(
                 context,
                 if (context.isDarkTheme) R.color.md_dark_primary_text else R.color.md_light_primary_text
@@ -261,19 +253,31 @@ private constructor(private val mContext: Context) : ThemeStoreInterface {
 
         @CheckResult
         @ColorInt
-        fun textColorSecondary(context: Context): Int {
+        fun textColorPrimaryInverse(context: Context): Int {
+            // 修改说明：反转色——暗色模式返回深色文字（黑），浅色模式返回浅色文字（白）
             return ContextCompat.getColor(
                 context,
-                if (context.isDarkTheme) R.color.md_light_secondary else R.color.md_dark_secondary
+                if (context.isDarkTheme) R.color.md_light_primary_text else R.color.md_dark_primary_text
+            )
+        }
+
+        @CheckResult
+        @ColorInt
+        fun textColorSecondary(context: Context): Int {
+            // 修改说明：修正分支颠倒——暗色模式返回 70% 白副文字，浅色模式返回 70% 黑副文字
+            return ContextCompat.getColor(
+                context,
+                if (context.isDarkTheme) R.color.md_dark_secondary else R.color.md_light_secondary
             )
         }
 
         @CheckResult
         @ColorInt
         fun textColorSecondaryInverse(context: Context): Int {
+            // 修改说明：反转色——暗色模式返回深色副文字，浅色模式返回浅色副文字
             return ContextCompat.getColor(
                 context,
-                if (context.isDarkTheme) R.color.md_dark_secondary else R.color.md_light_secondary
+                if (context.isDarkTheme) R.color.md_light_secondary else R.color.md_dark_secondary
             )
         }
 

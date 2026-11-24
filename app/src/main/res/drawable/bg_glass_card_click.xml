@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 修改文件路径：app/src/main/res/drawable/bg_glass_card_click.xml（新增）
+     用途：设置行玻璃卡片背景（带按压态）——
+     默认态引用 bg_glass_card 圆角玻璃卡；按压态叠加 transparent10 黑色遮罩保留按压反馈。
+     用于 view_preference.xml 等设置行布局，全局统一圆角玻璃卡列表风格 -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <layer-list>
+            <item android:drawable="@drawable/bg_glass_card" />
+            <item android:drawable="@color/transparent10" />
+        </layer-list>
+    </item>
+    <item android:state_focused="true">
+        <layer-list>
+            <item android:drawable="@drawable/bg_glass_card" />
+            <item android:drawable="@color/transparent10" />
+        </layer-list>
+    </item>
+    <item android:drawable="@drawable/bg_glass_card" />
+</selector>

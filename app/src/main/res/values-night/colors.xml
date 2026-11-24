@@ -4,8 +4,8 @@
          改动说明：全局配色改为「暗黑玻璃拟态」方案——
          深黑蓝底 + 半透明深色玻璃卡片/顶栏 + 霓虹紫蓝强调色，
          浅色对应方案见 values/colors.xml，跟随系统 DayNight 自动切换 -->
-    <!-- 顶栏/控件主色：80%透明深色玻璃 -->
-    <color name="primary">#CC161626</color>
+    <!-- 顶栏/控件主色：94%透明深色玻璃（由 80% 加实，夜色顶栏浅字更清晰） -->
+    <color name="primary">#F0161626</color>
     <color name="primaryDark">#E60F0F1A</color>
     <!-- 强调色：霓虹紫蓝 -->
     <color name="accent">#FF8B7BFF</color>
@@ -14,8 +14,8 @@
 
     <!-- 窗口背景：深黑蓝 -->
     <color name="background">#FF0B0B14</color>
-    <!-- 卡片背景：80%透明深色玻璃 -->
-    <color name="background_card">#CC1C1C2E</color>
+    <!-- 卡片背景：90%透明深色玻璃（由 80% 加实，70% 白字对比约 8:1） -->
+    <color name="background_card">#E61C1C2E</color>
     <color name="background_menu">#F0202030</color>
     <color name="background_prefs">#10303030</color>
 
@@ -37,19 +37,23 @@
     <color name="card_bg_water">#69121212</color>
     <color name="card_border_water">#39bdbdbd</color>
 
-    <!-- 玻璃拟态卡片：底色与描边（紫调霓虹描边） -->
-    <color name="glass_card_bg">#66202034</color>
-    <color name="glass_card_border">#338B7BFF</color>
+    <!-- 玻璃拟态卡片：底色与描边（紫调霓虹描边）
+         底色由 40% 加实到 70%——40% 时卡片与背景几乎融为一块、文字发飘；
+         夜色不加到实色，保留 30% 透感避免暗环境刺眼；描边由 20% 提到 30% 保轮廓 -->
+    <color name="glass_card_bg">#B31C1C2E</color>
+    <color name="glass_card_border">#4D8B7BFF</color>
 
     <color name="darker_gray">#66666666</color>
 
-    <color name="tv_btn_normal_black">#737373</color>
+    <!-- 按钮文字：60% 白（原 45% 中性灰） -->
+    <color name="tv_btn_normal_black">#99FFFFFF</color>
     <color name="tv_btn_press_black">#565656</color>
 
     <color name="primaryText">#ffffffff</color>
     <color name="secondaryText">#b3ffffff</color>
-    <color name="tv_text_summary">#B3B3B3</color>
-    <color name="menu_color_default">#b7b7b7</color>
+    <!-- 修改说明：摘要/辅助文字由中性灰统一到 70% 白与 secondaryText 同级；弹出菜单文字 80% 白提亮一档 -->
+    <color name="tv_text_summary">#B3FFFFFF</color>
+    <color name="menu_color_default">#CCFFFFFF</color>
 
 
     <color name="tv_text_button_nor">#303030</color>

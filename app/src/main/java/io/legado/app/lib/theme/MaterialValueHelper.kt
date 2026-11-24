@@ -26,13 +26,16 @@ fun Context.getPrimaryTextColor(dark: Boolean): Int {
     if (AppConfig.isEInkMode) {
         return if (dark) android.graphics.Color.BLACK else android.graphics.Color.WHITE
     }
-    // 参数语义与原版保持一致——dark=true 表示背景为浅色，应显示深色文字；
-    // dark=false 表示背景为暗色，应显示浅色文字。全项目调用处均传 isLight/isColorLight，
-    // 上一轮误将返回值对调，导致白底白字、黑底黑字，此处恢复原版语义
+    // 修改文件路径：MaterialValueHelper.kt
+    // 改动说明：修正参数语义与返回值的对应关系——参数 dark=true 表示"背景为浅色"，
+    // 应返回深色文字。注意：md_light_primary_text 是"浅色主题用的深色文字"（黑），
+    // md_dark_primary_text 是"深色主题用的浅色文字"（白），此前误将两者对调，
+    // 导致全项目约 30 处传 isColorLight(浅玻璃底)=true 的调用拿到白字（白底白字看不清）。
+    // 全项目调用点（Preference/底部导航/阅读菜单/Toast等）均传 isLight/isColorLight 语义
     return if (dark) {
-        ContextCompat.getColor(this, R.color.md_dark_primary_text)
-    } else {
         ContextCompat.getColor(this, R.color.md_light_primary_text)
+    } else {
+        ContextCompat.getColor(this, R.color.md_dark_primary_text)
     }
 }
 
@@ -42,34 +45,41 @@ fun Context.getSecondaryTextColor(dark: Boolean): Int {
     if (AppConfig.isEInkMode) {
         return if (dark) 0xFF333333.toInt() else 0xFFCCCCCC.toInt()
     }
-    // 与 getPrimaryTextColor 同语义（dark=true → 深色文字）
+    // 修改文件路径：MaterialValueHelper.kt
+    // 改动说明：与 getPrimaryTextColor 同步修正——dark=true（浅背景）返回深色副文字
+    // md_light_secondary（70%黑）；dark=false（暗背景）返回浅色副文字 md_dark_secondary
+    // （70%白），层级与夜色 secondaryText 资源一致
     return if (dark) {
-        ContextCompat.getColor(this, R.color.md_dark_primary_text)
-    } else {
         ContextCompat.getColor(this, R.color.md_light_secondary)
+    } else {
+        ContextCompat.getColor(this, R.color.md_dark_secondary)
     }
 }
 
 @ColorInt
 fun Context.getPrimaryDisabledTextColor(dark: Boolean): Int {
+    // 修改文件路径：MaterialValueHelper.kt
+    // 改动说明：同步修正分支——dark=true（浅背景）返回浅色主题的禁用色（深色系）
     return if (dark) {
-        ContextCompat.getColor(this, R.color.md_dark_disabled)
-    } else {
         ContextCompat.getColor(this, R.color.md_light_disabled)
+    } else {
+        ContextCompat.getColor(this, R.color.md_dark_disabled)
     }
 }
 
 @ColorInt
 fun Context.getSecondaryDisabledTextColor(dark: Boolean): Int {
+    // 修改文件路径：MaterialValueHelper.kt
+    // 改动说明：同步修正分支——dark=true（浅背景）返回浅色主题的禁用色（深色系）
     return if (dark) {
         ContextCompat.getColor(
             this,
-            androidx.appcompat.R.color.secondary_text_disabled_material_dark
+            androidx.appcompat.R.color.secondary_text_disabled_material_light
         )
     } else {
         ContextCompat.getColor(
             this,
-            androidx.appcompat.R.color.secondary_text_disabled_material_light
+            androidx.appcompat.R.color.secondary_text_disabled_material_dark
         )
     }
 }

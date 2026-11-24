@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- 修改文件路径：app/src/main/res/layout/view_preference.xml
+     改动说明：设置行统一玻璃卡片化——背景由 bg_prefs_color（矩形色块）改为
+     bg_glass_card_click（圆角玻璃卡+按压态），并加左右/底部边距让行间自然分离；
+     该布局被我的页/备份恢复页/各设置页/阅读设置对话框共用，一次改动全局生效 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/bg_prefs_color"
+    android:background="@drawable/bg_glass_card_click"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    android:layout_marginBottom="4dp"
     android:paddingLeft="16dp"
     android:paddingTop="10dp"
     android:paddingRight="16dp"

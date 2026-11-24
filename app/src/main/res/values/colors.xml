@@ -5,8 +5,8 @@
          浅灰蓝底 + 半透明白玻璃卡片/顶栏 + 霓虹紫蓝强调色，
          深色对应方案见 values-night/colors.xml，跟随系统 DayNight 自动切换 -->
     <color name="launcher_background">#FF1A2F5A</color>
-    <!-- 顶栏/控件主色：90%透明白玻璃 -->
-    <color name="primary">#D9FFFFFF</color>
+    <!-- 顶栏/控件主色：95%透明白玻璃（由 85% 加实，提升顶栏文字与弹出菜单对比度） -->
+    <color name="primary">#F2FFFFFF</color>
     <color name="primaryDark">#E6E8EFFF</color>
     <!-- 强调色：深靛蓝（由霓虹紫蓝 #FF6558F0 加深，降低荧光感，与纯黑正文更协调） -->
     <color name="accent">#FF4C43D6</color>
@@ -24,10 +24,11 @@
 
     <!-- 窗口背景：冷调浅灰蓝 -->
     <color name="background">#FFF0F1F7</color>
-    <!-- 卡片背景：72%透明白玻璃 -->
-    <color name="background_card">#B8FFFFFF</color>
+    <!-- 卡片背景：94%透明白玻璃（由 72% 加实，底部导航/卡片上的副文字对比达 WCAG AA） -->
+    <color name="background_card">#F0FFFFFF</color>
     <color name="background_menu">#F2FFFFFF</color>
-    <color name="background_prefs">#7fffffff</color>
+    <!-- 设置页背景：统一到玻璃白（原 50% 透明白偏灰） -->
+    <color name="background_prefs">#F2FFFFFF</color>
 
     <color name="transparent">#00000000</color>
 
@@ -45,19 +46,23 @@
     <color name="card_bg_water">#69fdfdfd</color>
     <color name="card_border_water">#39424242</color>
 
-    <!-- 玻璃拟态卡片：底色与描边（深色变体见 values-night） -->
-    <color name="glass_card_bg">#A6FFFFFF</color>
-    <color name="glass_card_border">#1F16161E</color>
+    <!-- 玻璃拟态卡片：底色与描边（深色变体见 values-night）
+         底色由 65% 加实到 90%，保留微透感；描边由 12% 加深到 18% 使卡片轮廓可辨 -->
+    <color name="glass_card_bg">#E6FFFFFF</color>
+    <color name="glass_card_border">#2E16161E</color>
 
-    <color name="tv_btn_normal_black">#737373</color>
+    <!-- 按钮文字：60% 主题黑（原 45% 中性灰，与玻璃底对比不足） -->
+    <color name="tv_btn_normal_black">#9916161E</color>
     <color name="tv_btn_press_black">#adadad</color>
 
     <!-- 修改说明：主文字提亮为不透明近纯黑，副文字提至 70% 不透明，增强与玻璃卡片对比 -->
     <color name="primaryText">#FF16161E</color>
     <color name="secondaryText">#B316161E</color>
-    <color name="tv_text_summary">#8A2C2C2C</color>
+    <!-- 摘要/辅助文字：由 54% 灰统一到 70% 主题黑，与 secondaryText 同级（层级靠字号区分） -->
+    <color name="tv_text_summary">#B316161E</color>
     <color name="tv_text_book_detail">#dfdfdf</color>
-    <color name="menu_color_default">#383838</color>
+    <!-- 弹出菜单文字：80% 主题黑（原 #383838），色调与正文统一 -->
+    <color name="menu_color_default">#CC16161E</color>
 
 
     <color name="tv_text_button_nor">#efefef</color>

@@ -11,6 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="8dp" />
 
+    <!-- 修改文件路径：app/src/main/res/layout/view_preference_category.xml
+         改动说明：分类标题加 14sp 加粗，配合深靛蓝 accent 色让分组头更清晰 -->
     <TextView
         android:id="@+id/preference_title"
         android:paddingTop="16dp"
@@ -19,6 +21,8 @@
         android:paddingLeft="16dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:textStyle="bold"
         android:textColor="@color/accent"
         tools:ignore="RtlHardcoded,RtlSymmetry" />
 
