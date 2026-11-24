@@ -1,0 +1,82 @@
+# ============================================================================
+# 修改文件路径：.github/workflows/build-apk.yml
+# 用途：推送代码到 main 分支后自动编译 Debug 依赖的 Release 版 APK（个人自用）
+# 说明：参考上游 .github/workflows/release.yml 的签名方式，通过 GitHub Secrets
+#       注入签名密钥，签名与我们本机生成的 D:\LegadoKeys\legado-release.jks 一致，
+#       保证后续版本可以互相覆盖安装
+# ============================================================================
+
+name: Build APK  # 工作流显示名称
+
+on:
+  push:
+    branches:
+      - main        # 每次推送代码到 main 分支自动触发编译
+  workflow_dispatch: # 支持在 GitHub Actions 页面手动点击触发
+
+jobs:
+  check-sign:
+    # 先检查是否已配置签名 Secrets，未配置则跳过编译并给出提示
+    runs-on: ubuntu-latest
+    outputs:
+      sign: ${{ steps.check.outputs.sign }}
+    steps:
+      - id: check
+        run: |
+          # 检查签名密钥 Secret 是否存在
+          if [ ! -z "${{ secrets.RELEASE_KEY_STORE }}" ]; then
+            echo "sign=yes" >> $GITHUB_OUTPUT
+          else
+            echo "sign=no" >> $GITHUB_OUTPUT
+          fi
+
+  build:
+    needs: check-sign
+    # 未配置签名密钥时跳过，避免白白消耗编译时长
+    if: ${{ needs.check-sign.outputs.sign == 'yes' }}
+    runs-on: ubuntu-latest
+    steps:
+      # 拉取完整历史：versionCode = 10000 + git提交总数，必须完整历史才能统计正确
+      - name: 拉取完整代码
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: 配置 JDK 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: 17
+
+      - name: 配置 Gradle 缓存
+        uses: gradle/actions/setup-gradle@v5
+
+      - name: 注入签名配置
+        run: |
+          # 将 Secrets 中的签名信息写入 gradle.properties（仅存在于本次构建环境，不会提交）
+          echo -e "\n" >> gradle.properties
+          echo RELEASE_KEY_ALIAS='${{ secrets.RELEASE_KEY_ALIAS }}' >> gradle.properties
+          echo RELEASE_KEY_PASSWORD='${{ secrets.RELEASE_KEY_PASSWORD }}' >> gradle.properties
+          echo RELEASE_STORE_PASSWORD='${{ secrets.RELEASE_STORE_PASSWORD }}' >> gradle.properties
+          echo RELEASE_STORE_FILE='./key.jks' >> gradle.properties
+          # 解码 base64 密钥文件到 app/key.jks（与 app/build.gradle 中 file() 的相对路径对应）
+          echo ${{ secrets.RELEASE_KEY_STORE }} | base64 --decode > $GITHUB_WORKSPACE/app/key.jks
+
+      - name: Gradle 编译 Release APK
+        run: |
+          chmod +x gradlew
+          # 只编译 app flavor 的 release 变体（本仓库仅有一个 app flavor，包名 io.legado.app）
+          ./gradlew assembleAppRelease --build-cache --parallel
+
+      - name: 收集 APK 产物
+        run: |
+          mkdir -p ${{ github.workspace }}/apk/
+          cp -rf ${{ github.workspace }}/app/build/outputs/apk/*/*/*.apk ${{ github.workspace }}/apk/
+          ls -l ${{ github.workspace }}/apk/
+
+      - name: 上传 APK 到构建产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: legado-app-release-apk
+          path: ${{ github.workspace }}/apk/*.apk
+          retention-days: 30  # 产物保留30天，可随时下载安装
