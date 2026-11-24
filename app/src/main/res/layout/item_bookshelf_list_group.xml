@@ -5,9 +5,17 @@
     android:id="@+id/cv_content"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginLeft="12dp"
+    android:layout_marginRight="12dp"
+    android:layout_marginTop="6dp"
+    android:layout_marginBottom="6dp"
+    android:background="@drawable/bg_glass_card"
     android:clickable="true"
     android:focusable="true"
     tools:ignore="UnusedAttribute">
+
+    <!-- 修改文件路径：app/src/main/res/layout/item_bookshelf_list_group.xml
+         改动说明：书架分组文件夹卡片玻璃拟态化——圆角半透明卡片 + 细描边 -->
 
     <io.legado.app.ui.widget.image.CoverImageView
         android:id="@+id/iv_cover"

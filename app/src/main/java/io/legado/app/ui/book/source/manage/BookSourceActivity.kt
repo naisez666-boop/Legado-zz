@@ -791,6 +791,13 @@ class BookSourceActivity : VMBaseActivity<ActivityBookSourceBinding, BookSourceV
             upBookSource(it)
             // 修改说明：处于分组筛选（group:xxx）时启用返回拦截，返回键回到分组列表
             backCallback.isEnabled = it.startsWith("group:")
+            // 修改文件路径：BookSourceActivity.kt
+            // 改动说明：层级区分——分组筛选时顶栏标题显示当前分组名，否则恢复默认标题
+            if (it.startsWith("group:")) {
+                binding.titleBar.title = it.substringAfter("group:")
+            } else {
+                binding.titleBar.title = getString(R.string.book_source)
+            }
         }
         return false
     }

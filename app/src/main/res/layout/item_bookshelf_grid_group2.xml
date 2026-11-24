@@ -5,11 +5,14 @@
     android:id="@+id/cv_content"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_item_focused_on_tv"
+    android:background="@drawable/bg_glass_card"
     android:clickable="true"
     android:focusable="true"
     android:scrollbars="none"
     tools:ignore="UnusedAttribute">
+
+    <!-- 修改文件路径：app/src/main/res/layout/item_bookshelf_grid_group2.xml
+         改动说明：书架分组文件夹卡片（四宫格封面）玻璃拟态化——圆角半透明卡片 + 细描边 -->
 
 
     <LinearLayout

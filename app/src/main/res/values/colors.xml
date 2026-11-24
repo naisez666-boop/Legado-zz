@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- 修改文件路径：app/src/main/res/values/colors.xml
+         改动说明：全局配色改为「玻璃拟态」浅色方案——
+         浅灰蓝底 + 半透明白玻璃卡片/顶栏 + 霓虹紫蓝强调色，
+         深色对应方案见 values-night/colors.xml，跟随系统 DayNight 自动切换 -->
     <color name="launcher_background">#FF1A2F5A</color>
-    <color name="primary">@color/md_light_blue_600</color>
-    <color name="primaryDark">@color/md_light_blue_700</color>
-    <color name="accent">@color/md_pink_800</color>
+    <!-- 顶栏/控件主色：90%透明白玻璃 -->
+    <color name="primary">#D9FFFFFF</color>
+    <color name="primaryDark">#E6E8EFFF</color>
+    <!-- 强调色：霓虹紫蓝 -->
+    <color name="accent">#FF6558F0</color>
 
     <color name="disabled">@color/md_light_disabled</color>
 
-    <color name="divider">#66666666</color>
+    <color name="divider">#1A16161E</color>
 
     <color name="lightBlue_color">#FF578FCC</color>
 
@@ -16,9 +22,11 @@
 
     <color name="night_mask">#00000000</color>
 
-    <color name="background">@color/md_grey_50</color>
-    <color name="background_card">@color/md_grey_100</color>
-    <color name="background_menu">@color/md_grey_200</color>
+    <!-- 窗口背景：冷调浅灰蓝 -->
+    <color name="background">#FFF0F1F7</color>
+    <!-- 卡片背景：72%透明白玻璃 -->
+    <color name="background_card">#B8FFFFFF</color>
+    <color name="background_menu">#F2FFFFFF</color>
     <color name="background_prefs">#7fffffff</color>
 
     <color name="transparent">#00000000</color>
@@ -37,11 +45,15 @@
     <color name="card_bg_water">#69fdfdfd</color>
     <color name="card_border_water">#39424242</color>
 
+    <!-- 玻璃拟态卡片：底色与描边（深色变体见 values-night） -->
+    <color name="glass_card_bg">#A6FFFFFF</color>
+    <color name="glass_card_border">#1F16161E</color>
+
     <color name="tv_btn_normal_black">#737373</color>
     <color name="tv_btn_press_black">#adadad</color>
 
-    <color name="primaryText">#de000000</color>
-    <color name="secondaryText">#8a000000</color>
+    <color name="primaryText">#DE16161E</color>
+    <color name="secondaryText">#8A16161E</color>
     <color name="tv_text_summary">#8A2C2C2C</color>
     <color name="tv_text_book_detail">#dfdfdf</color>
     <color name="menu_color_default">#383838</color>

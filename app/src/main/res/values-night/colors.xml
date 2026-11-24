@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary">@color/md_blue_grey_600</color>
-    <color name="primaryDark">@color/md_blue_grey_700</color>
-    <color name="accent">@color/md_deep_orange_800</color>
+    <!-- 修改文件路径：app/src/main/res/values-night/colors.xml
+         改动说明：全局配色改为「暗黑玻璃拟态」方案——
+         深黑蓝底 + 半透明深色玻璃卡片/顶栏 + 霓虹紫蓝强调色，
+         浅色对应方案见 values/colors.xml，跟随系统 DayNight 自动切换 -->
+    <!-- 顶栏/控件主色：80%透明深色玻璃 -->
+    <color name="primary">#CC161626</color>
+    <color name="primaryDark">#E60F0F1A</color>
+    <!-- 强调色：霓虹紫蓝 -->
+    <color name="accent">#FF8B7BFF</color>
 
     <color name="disabled">@color/md_dark_disabled</color>
 
-    <color name="background">@color/md_grey_900</color>
-    <color name="background_card">@color/md_grey_850</color>
-    <color name="background_menu">@color/md_grey_800</color>
+    <!-- 窗口背景：深黑蓝 -->
+    <color name="background">#FF0B0B14</color>
+    <!-- 卡片背景：80%透明深色玻璃 -->
+    <color name="background_card">#CC1C1C2E</color>
+    <color name="background_menu">#F0202030</color>
     <color name="background_prefs">#10303030</color>
 
     <color name="night_mask">#69000000</color>
@@ -18,7 +26,9 @@
     <color name="transparent30">#30ffffff</color>
     <color name="transparent50">#50ffffff</color>
 
-    <color name="bg_divider_line">#363636</color>
+    <color name="divider">#2EFFFFFF</color>
+
+    <color name="bg_divider_line">#24242F</color>
 
     <color name="btn_bg_press">#634D4D4D</color>
     <color name="btn_bg_press_2">#63686868</color>
@@ -26,6 +36,10 @@
 
     <color name="card_bg_water">#69121212</color>
     <color name="card_border_water">#39bdbdbd</color>
+
+    <!-- 玻璃拟态卡片：底色与描边（紫调霓虹描边） -->
+    <color name="glass_card_bg">#66202034</color>
+    <color name="glass_card_border">#338B7BFF</color>
 
     <color name="darker_gray">#66666666</color>
 

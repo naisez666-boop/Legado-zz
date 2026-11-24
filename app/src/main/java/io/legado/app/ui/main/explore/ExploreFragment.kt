@@ -158,12 +158,17 @@ class ExploreFragment() : VMBaseFragment<ExploreViewModel>(R.layout.fragment_exp
     /**
      * 修改文件路径：app/src/main/java/io/legado/app/ui/main/explore/ExploreFragment.kt
      * 改动说明：切换到分组列表模式（发现页默认界面）
+     * 层级区分：退出分组时顶栏恢复「发现」标题并移除返回箭头
      */
     private fun showGroupList() {
         selectedGroup = null
         binding.tvEmptyMsg.isGone = true
         binding.rvFind.adapter = groupAdapter
         groupAdapter.setItems(groups.toList())
+        // 层级区分：顶栏恢复默认标题、隐藏返回箭头
+        binding.titleBar.title = getString(R.string.discovery)
+        binding.titleBar.toolbar.navigationIcon = null
+        binding.titleBar.toolbar.setNavigationOnClickListener(null)
         // 退出分组后取消原有的发现数据监听，并清空搜索框内容
         exploreFlowJob?.cancel()
         searchView.setQuery("", false)
@@ -172,11 +177,18 @@ class ExploreFragment() : VMBaseFragment<ExploreViewModel>(R.layout.fragment_exp
     /**
      * 修改文件路径：app/src/main/java/io/legado/app/ui/main/explore/ExploreFragment.kt
      * 改动说明：进入指定分组，显示该分组下的发现源与发现目录
+     * 层级区分：顶栏显示返回箭头 + 当前分组名，点击返回箭头回到分组列表
      */
     private fun selectGroup(name: String) {
         selectedGroup = name
         binding.rvFind.adapter = adapter
         searchView.setQuery("group:$name", true)
+        // 层级区分：顶栏标题改为分组名并显示返回箭头
+        binding.titleBar.title = name
+        binding.titleBar.toolbar.setNavigationIcon(R.drawable.ic_arrow_back)
+        binding.titleBar.toolbar.setNavigationOnClickListener {
+            showGroupList()
+        }
     }
 
     private fun upExploreData(searchKey: String? = null) {

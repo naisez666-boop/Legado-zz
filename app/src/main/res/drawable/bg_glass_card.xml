@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 修改文件路径：app/src/main/res/drawable/bg_glass_card.xml（新增）
+     用途：玻璃拟态卡片背景——圆角半透明底色 + 细描边，
+     颜色引用 glass_card_bg / glass_card_border，深浅色跟随系统自动切换 -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <corners android:radius="16dp" />
+    <solid android:color="@color/glass_card_bg" />
+    <stroke
+        android:width="1dp"
+        android:color="@color/glass_card_border" />
+</shape>
