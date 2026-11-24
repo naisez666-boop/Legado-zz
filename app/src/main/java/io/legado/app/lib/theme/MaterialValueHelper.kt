@@ -21,7 +21,12 @@ import io.legado.app.utils.dpToPx
 
 @ColorInt
 fun Context.getPrimaryTextColor(dark: Boolean): Int {
-    // 修改说明：参数语义与原版保持一致——dark=true 表示背景为浅色，应显示深色文字；
+    // 修改说明：墨水屏模式下（浅色背景）文字改用纯黑，最大化对比度，
+    // 解决墨水屏灰阶显示时默认深灰文字（86%黑）看不清的问题
+    if (AppConfig.isEInkMode) {
+        return if (dark) android.graphics.Color.BLACK else android.graphics.Color.WHITE
+    }
+    // 参数语义与原版保持一致——dark=true 表示背景为浅色，应显示深色文字；
     // dark=false 表示背景为暗色，应显示浅色文字。全项目调用处均传 isLight/isColorLight，
     // 上一轮误将返回值对调，导致白底白字、黑底黑字，此处恢复原版语义
     return if (dark) {
@@ -33,7 +38,11 @@ fun Context.getPrimaryTextColor(dark: Boolean): Int {
 
 @ColorInt
 fun Context.getSecondaryTextColor(dark: Boolean): Int {
-    // 修改说明：与 getPrimaryTextColor 同语义（dark=true → 深色文字）
+    // 修改说明：墨水屏模式下（浅色背景）副文字用近纯黑加深对比
+    if (AppConfig.isEInkMode) {
+        return if (dark) 0xFF333333.toInt() else 0xFFCCCCCC.toInt()
+    }
+    // 与 getPrimaryTextColor 同语义（dark=true → 深色文字）
     return if (dark) {
         ContextCompat.getColor(this, R.color.md_dark_primary_text)
     } else {

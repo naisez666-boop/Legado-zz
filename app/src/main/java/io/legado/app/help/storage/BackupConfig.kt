@@ -2,6 +2,7 @@ package io.legado.app.help.storage
 
 import io.legado.app.R
 import io.legado.app.constant.PreferKey
+import io.legado.app.lib.theme.ThemeStorePrefKeys
 import io.legado.app.utils.FileUtils
 import io.legado.app.utils.GSON
 import io.legado.app.utils.fromJsonObject
@@ -99,6 +100,29 @@ object BackupConfig {
         PreferKey.tNavBarN
     )
 
+    // 修改文件路径：BackupConfig.kt
+    // 改动说明：旧版主题配色键（ThemeStore 持久化配色缓存），恢复备份时无条件忽略，
+    // 配合 ThemeStore 读取实时化，彻底断掉旧配色经备份复活的链路
+    private val legacyThemeColorKeys = arrayOf(
+        ThemeStorePrefKeys.KEY_PRIMARY_COLOR,
+        ThemeStorePrefKeys.KEY_PRIMARY_COLOR_DARK,
+        ThemeStorePrefKeys.KEY_ACCENT_COLOR,
+        ThemeStorePrefKeys.KEY_STATUS_BAR_COLOR,
+        ThemeStorePrefKeys.KEY_NAVIGATION_BAR_COLOR,
+        ThemeStorePrefKeys.KEY_TEXT_COLOR_PRIMARY,
+        ThemeStorePrefKeys.KEY_TEXT_COLOR_PRIMARY_INVERSE,
+        ThemeStorePrefKeys.KEY_TEXT_COLOR_SECONDARY,
+        ThemeStorePrefKeys.KEY_TEXT_COLOR_SECONDARY_INVERSE,
+        ThemeStorePrefKeys.KEY_BACKGROUND_COLOR,
+        ThemeStorePrefKeys.KEY_BOTTOM_BACKGROUND,
+        ThemeStorePrefKeys.KEY_APPLY_PRIMARYDARK_STATUSBAR,
+        ThemeStorePrefKeys.KEY_APPLY_PRIMARY_NAVBAR,
+        ThemeStorePrefKeys.KEY_AUTO_GENERATE_PRIMARYDARK,
+        ThemeStorePrefKeys.IS_CONFIGURED_KEY,
+        ThemeStorePrefKeys.IS_CONFIGURED_VERSION_KEY,
+        ThemeStorePrefKeys.VALUES_CHANGED
+    )
+
     private val coverPrefKeys = arrayOf(
         PreferKey.useDefaultCover,
         PreferKey.loadCoverOnlyWifi,
@@ -110,6 +134,11 @@ object BackupConfig {
 
     fun keyIsNotIgnore(key: String): Boolean {
         return when {
+            // 修改文件路径：BackupConfig.kt
+            // 改动说明：旧版主题配色键无条件忽略——玻璃拟态主题下配色固定，
+            // 恢复备份时不再导入备份文件里的旧配色（旧版棕/蓝灰等），
+            // 防止恢复备份后主题错乱复现；无论是否勾选「忽略主题配置」都生效
+            legacyThemeColorKeys.contains(key) -> false
             ignorePrefKeys.contains(key) -> false
             ignoreReadConfig && readPrefKeys.contains(key) -> false
             ignoreThemeConfig && themePrefKeys.contains(key) -> false

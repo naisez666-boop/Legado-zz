@@ -3,11 +3,13 @@ package io.legado.app.lib.theme
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
+import android.graphics.Color
 import androidx.annotation.AttrRes
 import androidx.annotation.CheckResult
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
+import io.legado.app.R
 import io.legado.app.utils.ColorUtils
 import splitties.init.appCtx
 import androidx.core.graphics.toColorInt
@@ -195,119 +197,92 @@ private constructor(private val mContext: Context) : ThemeStoreInterface {
         @CheckResult
         @ColorInt
         fun primaryColor(context: Context = appCtx): Int {
-            return prefs(context).getInt(
-                ThemeStorePrefKeys.KEY_PRIMARY_COLOR,
-                ThemeUtils.resolveColor(
-                    context,
-                    androidx.appcompat.R.attr.colorPrimary,
-                    "#455A64".toColorInt()
-                )
-            )
+            // 修改说明：玻璃拟态主题下不再读取 prefs 缓存（恢复备份会把旧配色写回导致错乱），
+            // 统一实时解析颜色资源，深浅色自动跟随
+            return ContextCompat.getColor(context, R.color.primary)
         }
 
         @CheckResult
         @ColorInt
         fun primaryColorDark(context: Context): Int {
-            return prefs(context).getInt(
-                ThemeStorePrefKeys.KEY_PRIMARY_COLOR_DARK,
-                ThemeUtils.resolveColor(
-                    context,
-                    androidx.appcompat.R.attr.colorPrimaryDark,
-                    "#37474F".toColorInt()
-                )
-            )
+            // 修改说明：同上，实时解析资源色
+            return ContextCompat.getColor(context, R.color.primaryDark)
         }
 
         @CheckResult
         @ColorInt
         fun accentColor(context: Context = appCtx): Int {
-            return prefs(context).getInt(
-                ThemeStorePrefKeys.KEY_ACCENT_COLOR,
-                ThemeUtils.resolveColor(
-                    context,
-                    androidx.appcompat.R.attr.colorAccent,
-                    "#263238".toColorInt()
-                )
-            )
+            // 修改说明：同上，实时解析资源色
+            return ContextCompat.getColor(context, R.color.accent)
         }
 
         @CheckResult
         @ColorInt
         fun statusBarColor(context: Context, transparent: Boolean): Int {
+            // 修改说明：透明时返回透明色，否则实时解析资源色
             return if (transparent) {
-                prefs(context).getInt(
-                    ThemeStorePrefKeys.KEY_STATUS_BAR_COLOR,
-                    primaryColor(context)
-                )
+                Color.TRANSPARENT
             } else {
-                prefs(context).getInt(
-                    ThemeStorePrefKeys.KEY_STATUS_BAR_COLOR,
-                    primaryColorDark(context)
-                )
+                ContextCompat.getColor(context, R.color.primaryDark)
             }
         }
 
         @CheckResult
         @ColorInt
         fun navigationBarColor(context: Context): Int {
-            return prefs(context).getInt(
-                ThemeStorePrefKeys.KEY_NAVIGATION_BAR_COLOR,
-                bottomBackground(context)
-            )
+            // 修改说明：实时解析资源色
+            return ContextCompat.getColor(context, R.color.background_card)
         }
 
         @CheckResult
         @ColorInt
         fun textColorPrimary(context: Context): Int {
-            return prefs(context).getInt(
-                ThemeStorePrefKeys.KEY_TEXT_COLOR_PRIMARY,
-                ThemeUtils.resolveColor(context, android.R.attr.textColorPrimary)
+            // 修改说明：实时解析，暗色模式浅字、浅色模式深字
+            return ContextCompat.getColor(
+                context,
+                if (context.isDarkTheme) R.color.md_light_primary_text else R.color.md_dark_primary_text
             )
         }
 
         @CheckResult
         @ColorInt
         fun textColorPrimaryInverse(context: Context): Int {
-            return prefs(context).getInt(
-                ThemeStorePrefKeys.KEY_TEXT_COLOR_PRIMARY_INVERSE,
-                ThemeUtils.resolveColor(context, android.R.attr.textColorPrimaryInverse)
+            return ContextCompat.getColor(
+                context,
+                if (context.isDarkTheme) R.color.md_dark_primary_text else R.color.md_light_primary_text
             )
         }
 
         @CheckResult
         @ColorInt
         fun textColorSecondary(context: Context): Int {
-            return prefs(context).getInt(
-                ThemeStorePrefKeys.KEY_TEXT_COLOR_SECONDARY,
-                ThemeUtils.resolveColor(context, android.R.attr.textColorSecondary)
+            return ContextCompat.getColor(
+                context,
+                if (context.isDarkTheme) R.color.md_light_secondary else R.color.md_dark_secondary
             )
         }
 
         @CheckResult
         @ColorInt
         fun textColorSecondaryInverse(context: Context): Int {
-            return prefs(context).getInt(
-                ThemeStorePrefKeys.KEY_TEXT_COLOR_SECONDARY_INVERSE,
-                ThemeUtils.resolveColor(context, android.R.attr.textColorSecondaryInverse)
+            return ContextCompat.getColor(
+                context,
+                if (context.isDarkTheme) R.color.md_dark_secondary else R.color.md_light_secondary
             )
         }
 
         @CheckResult
         @ColorInt
         fun backgroundColor(context: Context = appCtx): Int {
-            return prefs(context).getInt(
-                ThemeStorePrefKeys.KEY_BACKGROUND_COLOR,
-                ThemeUtils.resolveColor(context, android.R.attr.colorBackground)
-            )
+            // 修改说明：实时解析资源色
+            return ContextCompat.getColor(context, R.color.background)
         }
 
         @CheckResult
         @ColorInt
-        fun bottomBackground(context: Context = appCtx): Int {
-            return prefs(context).getInt(
-                ThemeStorePrefKeys.KEY_BOTTOM_BACKGROUND,
-                ThemeUtils.resolveColor(context, android.R.attr.colorBackground)
-            )
+        fun bottomBackground(context: Context): Int {
+            // 修改说明：实时解析资源色
+            return ContextCompat.getColor(context, R.color.background_card)
         }
 
         @CheckResult
