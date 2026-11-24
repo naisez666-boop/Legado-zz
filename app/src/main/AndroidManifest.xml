@@ -127,10 +127,16 @@
             </intent-filter>
         </activity>
         <!-- 主界面 -->
+        <!-- 修改文件路径：app/src/main/AndroidManifest.xml
+             改动说明：移除 MainActivity configChanges 中的 uiMode。
+             修复主题切换错乱：AppCompat 对声明了 uiMode 的 Activity 在深浅色变化时
+             不会 recreate，只原地更新资源，已膨胀的视图和 initTheme 的 setTheme
+             都停留在旧主题，导致亮/暗切换后界面深浅不一致、文字看不清。
+             移除后系统深浅切换和应用内切换主题模式都会触发完整重建，配色实时生效 -->
         <activity
             android:name=".ui.main.MainActivity"
             android:alwaysRetainTaskState="true"
-            android:configChanges="locale|keyboardHidden|orientation|screenSize|smallestScreenSize|screenLayout|uiMode"
+            android:configChanges="locale|keyboardHidden|orientation|screenSize|smallestScreenSize|screenLayout"
             android:exported="true"
             android:launchMode="singleTask" />
         <!-- 阅读界面 -->
