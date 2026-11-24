@@ -4,10 +4,12 @@ import android.app.Application
 import android.text.TextUtils
 import io.legado.app.R
 import io.legado.app.base.BaseViewModel
+import io.legado.app.constant.AppPattern
 import io.legado.app.data.appDb
 import io.legado.app.data.entities.BookSource
 import io.legado.app.data.entities.BookSourcePart
 import io.legado.app.data.entities.toBookSource
+import io.legado.app.help.source.SourceGroupRules
 import io.legado.app.help.source.SourceHelp
 import io.legado.app.utils.FileUtils
 import io.legado.app.utils.GSON
@@ -59,6 +61,36 @@ class BookSourceViewModel(application: Application) : BaseViewModel(application)
 
     fun update(vararg bookSource: BookSource) {
         execute { appDb.bookSourceDao.update(*bookSource) }
+    }
+
+    /**
+     * 修改文件路径：app/src/main/java/io/legado/app/ui/book/source/manage/BookSourceViewModel.kt
+     * 改动说明：新增「自动分组」功能
+     * 把「待分配」分组内的书源按逻辑规则分类（大类 小说/漫画/音频/影视/文件 +
+     * 细分 R18/要登录/校验失败），分类完成后移出「待分配」分组
+     * 完成后通过回调返回处理数量，由界面弹出提示
+     */
+    fun autoGroupSources(result: (Int) -> Unit) {
+        execute {
+            // 只处理「待分配」分组内的书源
+            val pendingSources = appDb.bookSourceDao.getByGroup(SourceGroupRules.GROUP_TODO)
+            pendingSources.forEach { source ->
+                val groups = linkedSetOf<String>()
+                // 保留「待分配」之外的原有分组（理论上不会有，防御性处理）
+                source.bookSourceGroup
+                    ?.splitNotBlank(AppPattern.splitGroupRegex)
+                    ?.forEach { if (it != SourceGroupRules.GROUP_TODO) groups.add(it) }
+                // 加入按逻辑规则计算的分组
+                SourceGroupRules.classify(source)
+                    .splitNotBlank(AppPattern.splitGroupRegex)
+                    .forEach { groups.add(it) }
+                source.bookSourceGroup = groups.joinToString(",")
+            }
+            if (pendingSources.isNotEmpty()) {
+                SourceHelp.insertBookSource(*pendingSources.toTypedArray())
+            }
+            result(pendingSources.size)
+        }
     }
 
     fun upOrder(items: List<BookSourcePart>) {

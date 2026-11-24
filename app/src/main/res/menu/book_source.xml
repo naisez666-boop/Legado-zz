@@ -132,6 +132,13 @@
         android:title="@string/import_by_qr_code"
         app:showAsAction="never" />
 
+    <!-- 修改文件路径：app/src/main/res/menu/book_source.xml
+         改动说明：新增「自动分组」菜单项，把「待分配」分组内的书源按逻辑规则分类 -->
+    <item
+        android:id="@+id/menu_auto_group"
+        android:title="@string/menu_auto_group"
+        app:showAsAction="never" />
+
     <item
         android:id="@+id/menu_group_sources_by_domain"
         android:checkable="true"

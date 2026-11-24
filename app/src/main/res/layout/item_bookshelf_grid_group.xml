@@ -36,6 +36,74 @@
                 tools:ignore="UnusedAttribute,ImageContrastCheck"
                 tools:layout_editor_absoluteX="8dp" />
 
+            <!-- 修改文件路径：app/src/main/res/layout/item_bookshelf_grid_group.xml
+                 改动说明：分组封面四宫格——在封面框内透明叠加显示组内前4本书的封面，
+                 无自定义封面时生效，由适配器加载组内书籍封面 -->
+            <LinearLayout
+                android:id="@+id/fl_mosaic"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:orientation="vertical"
+                android:padding="12dp"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_cover"
+                app:layout_constraintEnd_toEndOf="@+id/iv_cover"
+                app:layout_constraintStart_toStartOf="@+id/iv_cover"
+                app:layout_constraintTop_toTopOf="@+id/iv_cover">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/iv_mosaic1"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_margin="1dp"
+                        android:layout_weight="1"
+                        android:contentDescription="@string/book_name"
+                        android:scaleType="centerCrop" />
+
+                    <ImageView
+                        android:id="@+id/iv_mosaic2"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_margin="1dp"
+                        android:layout_weight="1"
+                        android:contentDescription="@string/book_name"
+                        android:scaleType="centerCrop" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/iv_mosaic3"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_margin="1dp"
+                        android:layout_weight="1"
+                        android:contentDescription="@string/book_name"
+                        android:scaleType="centerCrop" />
+
+                    <ImageView
+                        android:id="@+id/iv_mosaic4"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_margin="1dp"
+                        android:layout_weight="1"
+                        android:contentDescription="@string/book_name"
+                        android:scaleType="centerCrop" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
             <io.legado.app.ui.widget.text.BadgeView
                 android:id="@+id/bv_unread"
                 android:layout_width="wrap_content"

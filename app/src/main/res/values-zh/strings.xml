@@ -1201,6 +1201,9 @@
     <string name="read_aloud_by_media_button_title">耳机按键启动朗读</string>
     <string name="read_aloud_by_media_button_summary">通过耳机按键来启动朗读</string>
     <string name="group_sources_by_domain">按域名分组显示</string>
+    <!-- 修改文件路径：app/src/main/res/values-zh/strings.xml
+         改动说明：新增「自动分组」菜单文字 -->
+    <string name="menu_auto_group">自动分组</string>
     <string name="theme_config">主题配置</string>
     <string name="show_manga_ui">漫画浏览</string>
     <string name="disable_manga_scale">禁用漫画缩放</string>

@@ -2,8 +2,13 @@ package io.legado.app.ui.main.bookshelf.style2
 
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
+import io.legado.app.data.appDb
 import io.legado.app.data.entities.Book
 import io.legado.app.data.entities.BookGroup
 import io.legado.app.databinding.ItemBookshelfGrid2Binding
@@ -12,6 +17,7 @@ import io.legado.app.databinding.ItemBookshelfGridGroup2Binding
 import io.legado.app.databinding.ItemBookshelfGridGroupBinding
 import io.legado.app.help.book.isLocal
 import io.legado.app.help.config.AppConfig
+import io.legado.app.help.glide.ImageLoader
 import io.legado.app.utils.gone
 import io.legado.app.utils.invisible
 import io.legado.app.utils.visible
@@ -21,6 +27,45 @@ import splitties.views.onLongClick
 class BooksAdapterGrid(context: Context, callBack: CallBack) :
     BaseBooksAdapter<RecyclerView.ViewHolder>(context, callBack) {
     private val showBookname = AppConfig.showBookname
+
+    /**
+     * 修改文件路径：app/src/main/java/io/legado/app/ui/main/bookshelf/style2/BooksAdapterGrid.kt
+     * 改动说明：分组封面四宫格——分组没有设置自定义封面时，在封面框内透明叠加显示
+     * 组内前4本书的封面（2x2排列，番茄小说风格）；有自定义封面时只显示封面
+     */
+    private fun loadGroupMosaic(
+        group: BookGroup,
+        mosaicRoot: View,
+        mosaicViews: List<ImageView>
+    ) {
+        if (!group.cover.isNullOrBlank()) {
+            // 分组设置了自定义封面：只显示封面，隐藏四宫格
+            mosaicRoot.gone()
+            return
+        }
+        mosaicRoot.visible()
+        Thread {
+            // 后台查询组内书籍封面（去重后取前4个）
+            val covers = appDb.bookDao.getBooksByGroup(group.groupId)
+                .mapNotNull { it.getDisplayCover() }
+                .distinct()
+                .take(4)
+            Handler(Looper.getMainLooper()).post {
+                mosaicViews.forEachIndexed { index, iv ->
+                    val cover = covers.getOrNull(index)
+                    if (cover == null) {
+                        // 组内书不足4本时，空位隐藏（保留占位空间）
+                        iv.invisible()
+                    } else {
+                        iv.visible()
+                        ImageLoader.load(context, cover)
+                            .centerCrop()
+                            .into(iv)
+                    }
+                }
+            }
+        }.start()
+    }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -198,6 +243,12 @@ class BooksAdapterGrid(context: Context, callBack: CallBack) :
                 tvName.text = item.groupName
             }
             ivCover.load(item.cover)
+            // 修改说明：分组封面四宫格，无自定义封面时显示组内前4本书封面
+            loadGroupMosaic(
+                item,
+                binding.flMosaic,
+                listOf(binding.ivMosaic1, binding.ivMosaic2, binding.ivMosaic3, binding.ivMosaic4)
+            )
         }
 
         fun onBind(item: BookGroup, position: Int, payloads: MutableList<Any>) = binding.run {
@@ -209,7 +260,15 @@ class BooksAdapterGrid(context: Context, callBack: CallBack) :
                     bundle.keySet().forEach {
                         when (it) {
                             "groupName" -> tvName.text = item.groupName
-                            "cover" -> ivCover.load(item.cover)
+                            "cover" -> {
+                                ivCover.load(item.cover)
+                                // 修改说明：封面更新时同步刷新四宫格
+                                loadGroupMosaic(
+                                    item,
+                                    binding.flMosaic,
+                                    listOf(binding.ivMosaic1, binding.ivMosaic2, binding.ivMosaic3, binding.ivMosaic4)
+                                )
+                            }
                         }
                     }
                 }
@@ -240,6 +299,12 @@ class BooksAdapterGrid(context: Context, callBack: CallBack) :
                 }
             }
             ivCover.load(item.cover)
+            // 修改说明：分组封面四宫格，无自定义封面时显示组内前4本书封面
+            loadGroupMosaic(
+                item,
+                binding.flMosaic,
+                listOf(binding.ivMosaic1, binding.ivMosaic2, binding.ivMosaic3, binding.ivMosaic4)
+            )
         }
 
         fun onBind(item: BookGroup, position: Int, payloads: MutableList<Any>) = binding.run {
@@ -258,7 +323,15 @@ class BooksAdapterGrid(context: Context, callBack: CallBack) :
                                     tvName.text = it
                                 }
                             }
-                            "cover" -> ivCover.load(item.cover)
+                            "cover" -> {
+                                ivCover.load(item.cover)
+                                // 修改说明：封面更新时同步刷新四宫格
+                                loadGroupMosaic(
+                                    item,
+                                    binding.flMosaic,
+                                    listOf(binding.ivMosaic1, binding.ivMosaic2, binding.ivMosaic3, binding.ivMosaic4)
+                                )
+                            }
                         }
                     }
                 }

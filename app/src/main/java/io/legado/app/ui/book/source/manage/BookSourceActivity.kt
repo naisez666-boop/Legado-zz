@@ -197,6 +197,12 @@ class BookSourceActivity : VMBaseActivity<ActivityBookSourceBinding, BookSourceV
 
             R.id.menu_import_onLine -> showImportDialog()
 
+            // 修改文件路径：app/src/main/java/io/legado/app/ui/book/source/manage/BookSourceActivity.kt
+            // 改动说明：新增「自动分组」菜单，把「待分配」分组内的书源按逻辑规则分类
+            R.id.menu_auto_group -> viewModel.autoGroupSources { count ->
+                toastOnUi(if (count > 0) "自动分组完成，已处理 $count 个书源" else "「待分配」分组内没有书源")
+            }
+
             R.id.menu_sort_desc -> {
                 sortAscending = !sortAscending
                 item.isChecked = !sortAscending
