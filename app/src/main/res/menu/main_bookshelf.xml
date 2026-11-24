@@ -70,6 +70,13 @@
         android:title="@string/import_bookshelf"
         app:showAsAction="never" />
 
+    <!-- 修改文件路径：app/src/main/res/menu/main_bookshelf.xml 新增阅读历史入口 -->
+    <item
+        android:id="@+id/menu_read_history"
+        android:icon="@drawable/ic_history"
+        android:title="@string/read_history"
+        app:showAsAction="never" />
+
     <item
         android:id="@+id/menu_log"
         android:icon="@drawable/ic_cfg_about"

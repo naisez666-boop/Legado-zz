@@ -592,6 +592,10 @@
     <string name="move_to_group">Move to group</string>
     <string name="add_group">Add to Groups</string>
     <string name="remove_group">Remove from Groups</string>
+    <!-- 修改文件路径：app/src/main/res/values/strings.xml 新增书源更改分组相关文案 -->
+    <string name="change_source_group">Change Group</string>
+    <string name="source_group_select">Source Group Select</string>
+    <string name="new_source_group">New Group</string>
     <string name="add_replace_rule">New replacement</string>
     <string name="group">Group</string>
     <string name="group_s">Group: %s</string>
@@ -656,6 +660,10 @@
     <string name="add_to_text_context_menu_s">Long tap to display Legado·Search in the operation menu</string>
     <string name="add_to_text_context_menu_t">Text operation display Search</string>
     <string name="record_log">Record log</string>
+    <!-- 修改文件路径：app/src/main/res/values/strings.xml 新增阅读历史相关文案 -->
+    <string name="read_history">Reading History</string>
+    <string name="last_read_time">Last read: %1$s</string>
+    <string name="no_read_history">No reading history</string>
     <string name="log">Log</string>
     <string name="chinese_converter">Simplified conversion</string>
     <string name="change_icon_error">The icon is a vector icon, which was not supported before Android 8.0</string>

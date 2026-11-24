@@ -786,6 +786,14 @@ class BookSourceActivity : VMBaseActivity<ActivityBookSourceBinding, BookSourceV
         }
     }
 
+    /**
+     * 修改文件路径：app/src/main/java/io/legado/app/ui/book/source/manage/BookSourceActivity.kt
+     * 改动说明：实现「更改分组」回调，弹出书源分组选择对话框
+     */
+    override fun changeGroup(bookSource: BookSourcePart) {
+        showDialogFragment(SourceGroupSelectDialog(bookSource.bookSourceUrl))
+    }
+
     override fun finish() {
         if (searchView.query.isNullOrEmpty()) {
             super.finish()

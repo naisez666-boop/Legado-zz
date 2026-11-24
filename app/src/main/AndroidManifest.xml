@@ -252,6 +252,11 @@
             android:name=".ui.book.manage.BookshelfManageActivity"
             android:launchMode="singleTop"
             android:screenOrientation="behind" />
+        <!-- 修改文件路径：app/src/main/AndroidManifest.xml 新增阅读历史页面注册 -->
+        <activity
+            android:name=".ui.book.readhistory.ReadingHistoryActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="behind" />
         <!-- 书源调试 -->
         <activity
             android:name=".ui.book.source.debug.BookSourceDebugActivity"

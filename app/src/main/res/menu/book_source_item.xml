@@ -9,6 +9,11 @@
         android:id="@+id/menu_bottom"
         android:title="@string/to_bottom" />
 
+    <!-- 修改文件路径：app/src/main/res/menu/book_source_item.xml 新增更改分组菜单项 -->
+    <item
+        android:id="@+id/menu_change_group"
+        android:title="@string/change_source_group" />
+
     <item
         android:id="@+id/menu_login"
         android:title="@string/login" />

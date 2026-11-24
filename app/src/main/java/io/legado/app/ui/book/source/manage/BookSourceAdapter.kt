@@ -191,6 +191,9 @@ class BookSourceAdapter(
 
                 R.id.menu_search -> callBack.searchBook(source)
                 R.id.menu_debug_source -> callBack.debug(source)
+                // 修改文件路径：app/src/main/java/io/legado/app/ui/book/source/manage/BookSourceAdapter.kt
+                // 改动说明：item 菜单新增「更改分组」，弹出分组选择对话框
+                R.id.menu_change_group -> callBack.changeGroup(source)
                 R.id.menu_del -> {
                     callBack.del(source)
                     selected.remove(source)
@@ -372,6 +375,9 @@ class BookSourceAdapter(
         fun toBottom(bookSource: BookSourcePart)
         fun searchBook(bookSource: BookSourcePart)
         fun debug(bookSource: BookSourcePart)
+        // 修改文件路径：app/src/main/java/io/legado/app/ui/book/source/manage/BookSourceAdapter.kt
+        // 改动说明：新增更改分组回调
+        fun changeGroup(bookSource: BookSourcePart)
         fun upOrder(items: List<BookSourcePart>)
         fun enable(enable: Boolean, bookSource: BookSourcePart)
         fun enableExplore(enable: Boolean, bookSource: BookSourcePart)

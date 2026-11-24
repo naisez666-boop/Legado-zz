@@ -268,6 +268,17 @@ class BookSourceViewModel(application: Application) : BaseViewModel(application)
         }
     }
 
+    /**
+     * 修改文件路径：app/src/main/java/io/legado/app/ui/book/source/manage/BookSourceViewModel.kt
+     * 改动说明：新增单个书源更改分组方法，直接替换该书的分组列表
+     */
+    fun updateGroups(sourceUrl: String, groups: List<String>) {
+        execute {
+            val groupStr = groups.joinToString(",")
+            appDb.bookSourceDao.upGroup(sourceUrl, groupStr)
+        }
+    }
+
     fun upGroup(oldGroup: String, newGroup: String?) {
         execute {
             val sources = appDb.bookSourceDao.getByGroup(oldGroup)

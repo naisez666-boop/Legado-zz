@@ -230,8 +230,13 @@ object AppConfig : SharedPreferences.OnSharedPreferenceChangeListener {
     val screenOrientation: String?
         get() = appCtx.getPrefString(PreferKey.screenOrientation)
 
+    // ========================================================================
+    // 修改文件路径：app/src/main/java/io/legado/app/help/config/AppConfig.kt
+    // 改动说明：书架分组样式默认值由 0（style1 顶部菜单切换分组）改为 1
+    // （style2 番茄小说式：分组文件夹与书籍在书架内混排，点进分组查看组内书籍）
+    // ========================================================================
     var bookGroupStyle: Int
-        get() = appCtx.getPrefInt(PreferKey.bookGroupStyle, 0)
+        get() = appCtx.getPrefInt(PreferKey.bookGroupStyle, 1)
         set(value) {
             appCtx.putPrefInt(PreferKey.bookGroupStyle, value)
         }

@@ -25,6 +25,7 @@ import io.legado.app.ui.book.group.GroupManageDialog
 import io.legado.app.ui.book.import.local.ImportBookActivity
 import io.legado.app.ui.book.import.remote.RemoteBookActivity
 import io.legado.app.ui.book.manage.BookshelfManageActivity
+import io.legado.app.ui.book.readhistory.ReadingHistoryActivity
 import io.legado.app.ui.book.search.SearchActivity
 import io.legado.app.ui.file.HandleFileContract
 import io.legado.app.ui.main.MainFragmentInterface
@@ -97,6 +98,9 @@ abstract class BaseBookshelfFragment(layoutId: Int) : VMBaseFragment<BookshelfVi
         when (item.itemId) {
             R.id.menu_remote -> startActivity<RemoteBookActivity>()
             R.id.menu_search -> startActivity<SearchActivity>()
+            // 修改文件路径：app/src/main/java/io/legado/app/ui/main/bookshelf/BaseBookshelfFragment.kt
+            // 改动说明：顶栏菜单新增「阅读历史」入口，跳转到阅读历史页面
+            R.id.menu_read_history -> startActivity<ReadingHistoryActivity>()
             R.id.menu_update_toc -> activityViewModel.upToc(books, onlyUpdateRead)
             R.id.menu_bookshelf_layout -> configBookshelf()
             R.id.menu_group_manage -> showDialogFragment<GroupManageDialog>()

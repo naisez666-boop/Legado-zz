@@ -8,6 +8,7 @@ import io.legado.app.base.BaseViewModel
 import io.legado.app.constant.AppConst
 import io.legado.app.constant.AppLog
 import io.legado.app.constant.AppPattern
+import io.legado.app.constant.BookSourceType
 import io.legado.app.data.appDb
 import io.legado.app.data.entities.BookSource
 import io.legado.app.data.entities.BookSourcePart
@@ -34,6 +35,35 @@ import androidx.core.net.toUri
 class ImportBookSourceViewModel(app: Application) : BaseViewModel(app) {
     var isAddGroup = false
     var groupName: String? = null
+
+    companion object {
+        // ====================================================================
+        // 修改文件路径：app/src/main/java/io/legado/app/ui/association/ImportBookSourceViewModel.kt
+        // 改动说明：新增书源导入自动分组规则
+        // 1.按书源类型自动分大类：小说/漫画/音频/影视/文件
+        // 2.小说类细分小类：R18(按关键词识别)、要登录(含登录配置)、校验失败(无搜索和发现规则)
+        // 3.所有新导入的书源同时进入「待整理」分组，由用户后续手动归组
+        // ====================================================================
+
+        // 书源类型对应的大类分组名
+        const val GROUP_NOVEL = "小说"
+        const val GROUP_MANGA = "漫画"
+        const val GROUP_AUDIO = "音频"
+        const val GROUP_VIDEO = "影视"
+        const val GROUP_FILE = "文件"
+        // 细分小类分组名
+        const val GROUP_R18 = "R18"
+        const val GROUP_NEED_LOGIN = "要登录"
+        const val GROUP_CHECK_FAIL = "校验失败"
+        // 所有导入的书源先进此临时分组，等待用户手动整理
+        const val GROUP_TODO = "待整理"
+
+        // R18 识别关键词（匹配书源名称或地址，可自行补充）
+        private val r18Keywords = arrayOf(
+            "r18", "18+", "nsfw", "成人", "情色", "色情",
+            "涩涩", "福利", "绅士", "肉漫", "黄文"
+        )
+    }
     val errorLiveData = MutableLiveData<String>()
     val successLiveData = MutableLiveData<Int>()
 
@@ -118,6 +148,16 @@ class ImportBookSourceViewModel(app: Application) : BaseViewModel(app) {
                         } else {
                             source.bookSourceGroup = group
                         }
+                    } else {
+                        // ------------------------------------------------------------
+                        // 修改文件路径：app/src/main/java/io/legado/app/ui/association/ImportBookSourceViewModel.kt
+                        // 改动说明：导入时用户未指定分组，则自动按规则分组（大类 + 细分小类 + 待整理）
+                        // 若勾选了"保留原有分组"且原分组不为空，则不做自动分组
+                        // ------------------------------------------------------------
+                        val hasKeepGroup = keepGroup && !source.bookSourceGroup.isNullOrBlank()
+                        if (!hasKeepGroup) {
+                            source.bookSourceGroup = autoClassifyGroups(source)
+                        }
                     }
                     selectSource.add(source)
                 }
@@ -127,6 +167,42 @@ class ImportBookSourceViewModel(app: Application) : BaseViewModel(app) {
         }.onFinally {
             finally.invoke()
         }
+    }
+
+    /**
+     * 修改文件路径：app/src/main/java/io/legado/app/ui/association/ImportBookSourceViewModel.kt
+     * 改动说明：自动给书源计算分组
+     * 规则：大类（小说/漫画/音频/影视/文件）+ 细分小类（R18/要登录/校验失败）+ 待整理
+     * 返回逗号分隔的分组字符串，直接覆盖书源原有分组
+     */
+    private fun autoClassifyGroups(source: BookSource): String {
+        val groups = linkedSetOf<String>()
+        // 1.按书源类型分大类
+        groups.add(
+            when (source.bookSourceType) {
+                BookSourceType.image -> GROUP_MANGA
+                BookSourceType.audio -> GROUP_AUDIO
+                BookSourceType.video -> GROUP_VIDEO
+                BookSourceType.file -> GROUP_FILE
+                else -> GROUP_NOVEL
+            }
+        )
+        // 2.细分小类：R18（名称或地址含成人关键词）
+        val nameAndUrl = "${source.bookSourceName}${source.bookSourceUrl}".lowercase()
+        if (r18Keywords.any { nameAndUrl.contains(it) }) {
+            groups.add(GROUP_R18)
+        }
+        // 3.细分小类：要登录（配置了登录地址或登录UI）
+        if (!source.loginUrl.isNullOrBlank() || !source.loginUi.isNullOrBlank()) {
+            groups.add(GROUP_NEED_LOGIN)
+        }
+        // 4.细分小类：校验失败（既没有搜索规则也没有发现规则，无法正常使用）
+        if (source.searchUrl.isNullOrBlank() && source.exploreUrl.isNullOrBlank()) {
+            groups.add(GROUP_CHECK_FAIL)
+        }
+        // 5.统一加入待整理分组，由用户后续手动归组
+        groups.add(GROUP_TODO)
+        return groups.joinToString(",")
     }
 
     fun importSource(text: String) {

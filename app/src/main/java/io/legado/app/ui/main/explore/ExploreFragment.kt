@@ -1,10 +1,12 @@
 package io.legado.app.ui.main.explore
 
+import android.content.Context
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.SubMenu
 import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isGone
 import androidx.fragment.app.viewModels
@@ -14,11 +16,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.legado.app.R
 import io.legado.app.base.VMBaseFragment
+import io.legado.app.base.adapter.ItemViewHolder
+import io.legado.app.base.adapter.RecyclerAdapter
 import io.legado.app.constant.AppLog
 import io.legado.app.data.AppDatabase
 import io.legado.app.data.appDb
 import io.legado.app.data.entities.BookSourcePart
 import io.legado.app.databinding.FragmentExploreBinding
+import io.legado.app.databinding.ItemExploreGroupBinding
 import io.legado.app.help.config.AppConfig
 import io.legado.app.lib.dialogs.alert
 import io.legado.app.lib.theme.primaryColor
@@ -70,12 +75,23 @@ class ExploreFragment() : VMBaseFragment<ExploreViewModel>(R.layout.fragment_exp
     private var exploreFlowJob: Job? = null
     private var groupsMenu: SubMenu? = null
 
+    // ========================================================================
+    // 修改文件路径：app/src/main/java/io/legado/app/ui/main/explore/ExploreFragment.kt
+    // 改动说明：发现页改为「分组模式」展示
+    // 1.selectedGroup 为空时：列表显示发现分组，点进分组后才显示组内发现源与目录
+    // 2.selectedGroup 不为空时：沿用原有发现源列表逻辑
+    // 3.顶栏新增「分组列表」菜单，可随时返回分组列表
+    // ========================================================================
+    private var selectedGroup: String? = null
+    private val groupAdapter by lazy { GroupAdapter(requireContext()) }
+
     override fun onFragmentCreated(view: View, savedInstanceState: Bundle?) {
         setSupportToolbar(binding.titleBar.toolbar)
         initSearchView()
         initRecyclerView()
         initGroupData()
-        upExploreData()
+        // 默认显示分组列表
+        showGroupList()
     }
 
     override fun onCompatCreateOptionsMenu(menu: Menu) {
@@ -130,9 +146,37 @@ class ExploreFragment() : VMBaseFragment<ExploreViewModel>(R.layout.fragment_exp
                     groups.clear()
                     groups.addAll(it)
                     upGroupsMenu()
+                    // 分组模式下实时刷新分组列表
+                    if (selectedGroup == null) {
+                        groupAdapter.setItems(groups.toList())
+                    }
                     delay(500)
                 }
         }
+    }
+
+    /**
+     * 修改文件路径：app/src/main/java/io/legado/app/ui/main/explore/ExploreFragment.kt
+     * 改动说明：切换到分组列表模式（发现页默认界面）
+     */
+    private fun showGroupList() {
+        selectedGroup = null
+        binding.tvEmptyMsg.isGone = true
+        binding.rvFind.adapter = groupAdapter
+        groupAdapter.setItems(groups.toList())
+        // 退出分组后取消原有的发现数据监听，并清空搜索框内容
+        exploreFlowJob?.cancel()
+        searchView.setQuery("", false)
+    }
+
+    /**
+     * 修改文件路径：app/src/main/java/io/legado/app/ui/main/explore/ExploreFragment.kt
+     * 改动说明：进入指定分组，显示该分组下的发现源与发现目录
+     */
+    private fun selectGroup(name: String) {
+        selectedGroup = name
+        binding.rvFind.adapter = adapter
+        searchView.setQuery("group:$name", true)
     }
 
     private fun upExploreData(searchKey: String? = null) {
@@ -140,15 +184,23 @@ class ExploreFragment() : VMBaseFragment<ExploreViewModel>(R.layout.fragment_exp
         exploreFlowJob = viewLifecycleOwner.lifecycleScope.launch {
             when {
                 searchKey.isNullOrBlank() -> {
+                    // 修改说明：无查询时，未选中分组则显示分组列表模式
+                    if (selectedGroup == null) {
+                        showGroupList()
+                        return@launch
+                    }
                     appDb.bookSourceDao.flowExplore()
                 }
 
                 searchKey.startsWith("group:") -> {
                     val key = searchKey.substringAfter("group:")
+                    binding.rvFind.adapter = adapter
                     appDb.bookSourceDao.flowGroupExplore(key)
                 }
 
                 else -> {
+                    // 修改说明：普通关键字搜索时切换到发现源列表模式显示搜索结果
+                    binding.rvFind.adapter = adapter
                     appDb.bookSourceDao.flowExplore(searchKey)
                 }
             }.flowWithLifecycleAndDatabaseChange(
@@ -190,7 +242,41 @@ class ExploreFragment() : VMBaseFragment<ExploreViewModel>(R.layout.fragment_exp
     override fun onCompatOptionsItemSelected(item: MenuItem) {
         super.onCompatOptionsItemSelected(item)
         if (item.groupId == R.id.menu_group_text) {
-            searchView.setQuery("group:${item.title}", true)
+            // 修改文件路径：ExploreFragment.kt 点击顶栏分组菜单项 → 进入对应分组
+            selectGroup(item.title.toString())
+        }
+        when (item.itemId) {
+            // 修改文件路径：ExploreFragment.kt 顶栏「分组列表」菜单 → 返回分组列表模式
+            R.id.menu_show_groups -> showGroupList()
+        }
+    }
+
+    /**
+     * 修改文件路径：ExploreFragment.kt（内部类）
+     * 改动说明：发现分组列表适配器，展示所有发现分组，点击进入分组
+     */
+    private inner class GroupAdapter(context: Context) :
+        RecyclerAdapter<String, ItemExploreGroupBinding>(context) {
+
+        override fun getViewBinding(parent: ViewGroup): ItemExploreGroupBinding {
+            return ItemExploreGroupBinding.inflate(inflater, parent, false)
+        }
+
+        override fun convert(
+            holder: ItemViewHolder,
+            binding: ItemExploreGroupBinding,
+            item: String,
+            payloads: MutableList<Any>
+        ) {
+            binding.tvGroupName.text = item
+        }
+
+        override fun registerListener(holder: ItemViewHolder, binding: ItemExploreGroupBinding) {
+            binding.root.setOnClickListener {
+                getItem(holder.layoutPosition)?.let {
+                    selectGroup(it)
+                }
+            }
         }
     }
 

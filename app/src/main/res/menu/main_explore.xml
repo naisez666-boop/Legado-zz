@@ -12,4 +12,10 @@
 
     </item>
 
+    <!-- 修改文件路径：app/src/main/res/menu/main_explore.xml 新增「分组列表」菜单，返回分组模式 -->
+    <item
+        android:id="@+id/menu_show_groups"
+        android:title="@string/group_select"
+        app:showAsAction="never" />
+
 </menu>

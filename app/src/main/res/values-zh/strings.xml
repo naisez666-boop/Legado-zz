@@ -590,6 +590,10 @@
     <string name="move_to_group">移入分组</string>
     <string name="add_group">添加分组</string>
     <string name="remove_group">移除分组</string>
+    <!-- 修改文件路径：app/src/main/res/values-zh/strings.xml 新增书源更改分组相关文案 -->
+    <string name="change_source_group">更改分组</string>
+    <string name="source_group_select">书源分组选择</string>
+    <string name="new_source_group">新建分组</string>
     <string name="add_replace_rule">新建替换</string>
     <string name="group">分组</string>
     <string name="group_s">分组：%s</string>
@@ -654,6 +658,10 @@
     <string name="add_to_text_context_menu_s">长按文字在操作菜单中显示阅读·搜索</string>
     <string name="add_to_text_context_menu_t">文字操作显示搜索</string>
     <string name="record_log">记录日志</string>
+    <!-- 修改文件路径：app/src/main/res/values-zh/strings.xml 新增阅读历史相关文案 -->
+    <string name="read_history">阅读历史</string>
+    <string name="last_read_time">最近阅读：%1$s</string>
+    <string name="no_read_history">暂无阅读记录</string>
     <string name="log">日志</string>
     <string name="chinese_converter">中文简繁体转换</string>
     <string name="change_icon_error">图标为矢量图标，Android 8.0 以前不支持</string>
