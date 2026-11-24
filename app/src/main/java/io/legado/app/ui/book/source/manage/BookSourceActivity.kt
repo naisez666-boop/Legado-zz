@@ -6,6 +6,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.SubMenu
 import android.view.WindowManager
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
@@ -82,6 +83,7 @@ import kotlinx.coroutines.launch
  * 书源管理界面
  */
 class BookSourceActivity : VMBaseActivity<ActivityBookSourceBinding, BookSourceViewModel>(),
+    SourceGroupBrowseFragment.CallBack,
     PopupMenu.OnMenuItemClickListener,
     BookSourceAdapter.CallBack,
     SelectActionBar.CallBack,
@@ -166,9 +168,56 @@ class BookSourceActivity : VMBaseActivity<ActivityBookSourceBinding, BookSourceV
         initLiveDataGroup()
         initSelectActionBar()
         resumeCheckSource()
+        onBackPressedDispatcher.addCallback(this, backCallback)
+        // 修改文件路径：app/src/main/java/io/legado/app/ui/book/source/manage/BookSourceActivity.kt
+        // 改动说明：默认显示「分组浏览」层，点击分组进入书源列表，可返回
+        showGroupBrowse()
         if (!LocalConfig.bookSourcesHelpVersionIsLast) {
             showHelp("SourceMBookHelp")
         }
+    }
+
+    /**
+     * 修改文件路径：BookSourceActivity.kt
+     * 改动说明：系统返回键/顶栏返回箭头拦截器——
+     * 当前处于分组筛选（group:xxx）时，返回键回到「分组浏览」列表而不是退出页面
+     */
+    private val backCallback = object : OnBackPressedCallback(false) {
+        override fun handleOnBackPressed() {
+            searchView.setQuery("", true)
+            binding.titleBar.title = getString(R.string.book_source)
+            showGroupBrowse()
+        }
+    }
+
+    /**
+     * 修改文件路径：BookSourceActivity.kt
+     * 改动说明：显示「分组浏览」层（所有书源分组列表）
+     */
+    private fun showGroupBrowse() {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fl_group_browse, SourceGroupBrowseFragment(), "sourceGroupBrowse")
+            .commitAllowingStateLoss()
+    }
+
+    /**
+     * 修改文件路径：BookSourceActivity.kt
+     * 改动说明：隐藏「分组浏览」层
+     */
+    private fun hideGroupBrowse() {
+        supportFragmentManager.findFragmentByTag("sourceGroupBrowse")?.let {
+            supportFragmentManager.beginTransaction().remove(it).commitAllowingStateLoss()
+        }
+    }
+
+    /**
+     * 修改文件路径：BookSourceActivity.kt
+     * 改动说明：分组浏览点击分组回调——切换为该分组的书源列表，标题显示分组名
+     */
+    override fun onGroupBrowseSelect(name: String) {
+        hideGroupBrowse()
+        searchView.setQuery("group:$name", true)
+        binding.titleBar.title = name
     }
 
     override fun onCompatCreateOptionsMenu(menu: Menu): Boolean {
@@ -187,6 +236,16 @@ class BookSourceActivity : VMBaseActivity<ActivityBookSourceBinding, BookSourceV
 
     override fun onCompatOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            // 修改文件路径：BookSourceActivity.kt
+            // 改动说明：顶栏返回箭头——分组筛选状态下返回分组列表，否则退出页面
+            android.R.id.home -> {
+                if (backCallback.isEnabled) {
+                    backCallback.handleOnBackPressed()
+                } else {
+                    finish()
+                }
+                return true
+            }
             R.id.menu_add_book_source -> startActivity<BookSourceEditActivity>()
             R.id.menu_import_qr -> qrResult.launch()
             R.id.menu_group_manage -> showDialogFragment<GroupManageDialog>()
@@ -730,6 +789,8 @@ class BookSourceActivity : VMBaseActivity<ActivityBookSourceBinding, BookSourceV
     override fun onQueryTextChange(newText: String?): Boolean {
         newText?.let {
             upBookSource(it)
+            // 修改说明：处于分组筛选（group:xxx）时启用返回拦截，返回键回到分组列表
+            backCallback.isEnabled = it.startsWith("group:")
         }
         return false
     }

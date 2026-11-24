@@ -25,6 +25,14 @@
             android:layout_height="match_parent"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
+        <!-- 修改文件路径：app/src/main/res/layout/activity_book_source.xml
+             改动说明：书源管理默认显示「分组浏览」层（所有分组列表），
+             点击分组后隐藏此层显示分组内书源列表，返回时再显示 -->
+        <FrameLayout
+            android:id="@+id/fl_group_browse"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
     </FrameLayout>
 
     <io.legado.app.ui.widget.SelectActionBar
