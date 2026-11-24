@@ -62,10 +62,17 @@ jobs:
           # 解码 base64 密钥文件到 app/key.jks（与 app/build.gradle 中 file() 的相对路径对应）
           echo ${{ secrets.RELEASE_KEY_STORE }} | base64 --decode > $GITHUB_WORKSPACE/app/key.jks
 
+      - name: 切换为共存版 releaseS
+        run: |
+          # 与上游 test.yml 做法一致：把 release 变体的包名后缀替换为 .releaseS
+          # 打出的 APK 包名为 io.legado.app.releaseS，应用名显示为「阅读Plus」，
+          # 与手机上官方 Plus 渠道一致，且不与原版 legado 冲突
+          sed "s/'.release'/'.releaseS'/" $GITHUB_WORKSPACE/app/build.gradle -i
+
       - name: Gradle 编译 Release APK
         run: |
           chmod +x gradlew
-          # 只编译 app flavor 的 release 变体（本仓库仅有一个 app flavor，包名 io.legado.app）
+          # 只编译 app flavor 的 release 变体（本仓库仅有一个 app flavor）
           ./gradlew assembleAppRelease --build-cache --parallel
 
       - name: 收集 APK 产物
