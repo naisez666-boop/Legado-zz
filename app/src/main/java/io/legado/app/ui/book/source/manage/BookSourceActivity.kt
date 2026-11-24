@@ -23,6 +23,7 @@ import io.legado.app.R
 import io.legado.app.base.VMBaseActivity
 import io.legado.app.constant.AppLog
 import io.legado.app.constant.EventBus
+import io.legado.app.constant.PlazaUrl
 import io.legado.app.data.AppDatabase
 import io.legado.app.data.appDb
 import io.legado.app.data.entities.BookSourcePart
@@ -74,6 +75,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -179,15 +181,37 @@ class BookSourceActivity : VMBaseActivity<ActivityBookSourceBinding, BookSourceV
     /**
      * 修改文件路径：BookSourceActivity.kt
      * 改动说明：系统返回键/顶栏返回箭头拦截器——
-     * 当前处于分组筛选（group:xxx）时，返回键回到「分组浏览」列表而不是退出页面
+     * 有搜索词时清空搜索（清空后自动恢复分组浏览层）；
+     * 处于分组筛选（group:xxx）时，返回键回到「分组浏览」列表而不是退出页面
      */
     private val backCallback = object : OnBackPressedCallback(false) {
         override fun handleOnBackPressed() {
-            searchView.setQuery("", true)
-            binding.titleBar.title = getString(R.string.book_source)
-            showGroupBrowse()
+            when {
+                searchView.query?.isNotBlank() == true -> {
+                    searchView.setQuery("", true)
+                }
+
+                else -> {
+                    binding.titleBar.title = getString(R.string.book_source)
+                    showGroupBrowse()
+                }
+            }
         }
     }
+
+    /**
+     * 修改文件路径：BookSourceActivity.kt
+     * 改动说明：记录分组浏览层是否正在显示，供搜索联动使用——
+     * 输入搜索词时自动隐藏分组浏览层显示搜索结果；清空搜索词后恢复分组浏览层
+     */
+    private var groupBrowseShowing = false
+
+    /**
+     * 修改说明：记录开始搜索前是否处于分组浏览态——
+     * 只有从分组浏览默认页发起的搜索，清空后才恢复分组浏览层；
+     * 从某个分组列表内发起的搜索，清空后留在书源列表
+     */
+    private var browseBeforeSearch = false
 
     /**
      * 修改文件路径：BookSourceActivity.kt
@@ -197,6 +221,7 @@ class BookSourceActivity : VMBaseActivity<ActivityBookSourceBinding, BookSourceV
         supportFragmentManager.beginTransaction()
             .replace(R.id.fl_group_browse, SourceGroupBrowseFragment(), "sourceGroupBrowse")
             .commitAllowingStateLoss()
+        groupBrowseShowing = true
     }
 
     /**
@@ -207,6 +232,7 @@ class BookSourceActivity : VMBaseActivity<ActivityBookSourceBinding, BookSourceV
         supportFragmentManager.findFragmentByTag("sourceGroupBrowse")?.let {
             supportFragmentManager.beginTransaction().remove(it).commitAllowingStateLoss()
         }
+        groupBrowseShowing = false
     }
 
     /**
@@ -284,6 +310,63 @@ class BookSourceActivity : VMBaseActivity<ActivityBookSourceBinding, BookSourceV
             // 改动说明：新增「自动分组」菜单，把「待分配」分组内的书源按逻辑规则分类
             R.id.menu_auto_group -> viewModel.autoGroupSources { count ->
                 toastOnUi(if (count > 0) "自动分组完成，已处理 $count 个书源" else "「待分配」分组内没有书源")
+            }
+
+            // 修改文件路径：BookSourceActivity.kt
+            // 改动说明：新增「重新分类全部书源」——为全部书源按规则补全大类/细分标签，
+            // 无法补救的失效源（无搜索无发现规则）自动归入「校验失败」细分
+            R.id.menu_reclassify -> alert("重新分类全部书源") {
+                setMessage("将按规则为全部书源补全大类与细分标签，原有分组保留，\n无搜索无发现规则的失效源将归入「校验失败」。")
+                okButton {
+                    viewModel.reclassifyAll { count ->
+                        toastOnUi("重新分类完成，共处理 $count 个书源")
+                    }
+                }
+                cancelButton()
+            }
+
+            // 修改文件路径：BookSourceActivity.kt
+            // 改动说明：新增「书源广场」——从托管广场地址一键拉取书源列表并进入导入流程，
+            // 导入的书源会自动进入「待分配」并通过「自动分组」归类；
+            // 广场地址可自定义，默认为用户仓库 plaza/sources.json
+            R.id.menu_source_plaza -> alert("书源广场") {
+                setMessage("从广场地址拉取书源列表后进入导入流程，导入后可用「自动分组」归类。")
+                val bindingView = DialogEditTextBinding.inflate(layoutInflater).apply {
+                    editView.setText(PlazaUrl.SOURCE_PLAZA)
+                    editView.hint = "广场地址(json)"
+                }
+                customView { bindingView.root }
+                okButton {
+                    val url = bindingView.editView.text?.toString()?.trim()
+                    if (url.isNullOrBlank()) {
+                        toastOnUi("广场地址不能为空")
+                    } else {
+                        showDialogFragment(ImportBookSourceDialog(url))
+                    }
+                }
+                cancelButton()
+            }
+
+            // 修改文件路径：BookSourceActivity.kt
+            // 改动说明：新增「校验全部启用源」——不用手动勾选，一键联网校验
+            // 所有启用状态的书源；失败源由校验服务自动打上失效标签并归组，
+            // 校验期间显示进度提示，可随时取消
+            R.id.menu_check_all_enabled -> alert("校验全部启用源") {
+                setMessage("将对所有启用状态的书源逐个联网校验，耗时较长（进度见界面提示与通知栏），\n失败源将自动打上「网站失效/搜索失效」等标签并归组。")
+                okButton {
+                    lifecycleScope.launch(IO) {
+                        val sources = appDb.bookSourceDao.flowEnabled().first()
+                        if (sources.isEmpty()) {
+                            toastOnUi("没有启用状态的书源")
+                        } else {
+                            keepScreenOn(true)
+                            CheckSource.start(this@BookSourceActivity, sources)
+                            Debug.isChecking = false
+                            startCheckMessageRefreshJob(0, 0)
+                        }
+                    }
+                }
+                cancelButton()
             }
 
             R.id.menu_sort_desc -> {
@@ -813,9 +896,22 @@ class BookSourceActivity : VMBaseActivity<ActivityBookSourceBinding, BookSourceV
 
     override fun onQueryTextChange(newText: String?): Boolean {
         newText?.let {
+            // 修改文件路径：BookSourceActivity.kt
+            // 改动说明：搜索与分组浏览联动——输入搜索词时隐藏分组浏览层，
+            // 直接显示搜索结果（可搜索到分组内的具体书源：源名/组名/URL/备注均支持）；
+            // 清空搜索词后自动恢复分组浏览层
+            if (it.isNotBlank()) {
+                if (groupBrowseShowing) {
+                    browseBeforeSearch = true
+                    hideGroupBrowse()
+                }
+            } else if (browseBeforeSearch) {
+                browseBeforeSearch = false
+                showGroupBrowse()
+            }
             upBookSource(it)
-            // 修改说明：处于分组筛选（group:xxx）时启用返回拦截，返回键回到分组列表
-            backCallback.isEnabled = it.startsWith("group:")
+            // 修改说明：有搜索词时启用返回拦截，返回键先清空搜索回到之前的层级
+            backCallback.isEnabled = it.isNotBlank()
             // 修改文件路径：BookSourceActivity.kt
             // 改动说明：层级区分——分组筛选时顶栏标题显示当前分组名，否则恢复默认标题
             if (it.startsWith("group:")) {

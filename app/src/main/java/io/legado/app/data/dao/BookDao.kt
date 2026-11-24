@@ -34,12 +34,14 @@ interface BookDao {
         }
     }
 
+    // 修改文件路径：app/src/main/java/io/legado/app/data/dao/BookDao.kt
+    // 改动说明：书架根界面显示所有未分组的书（网络书/本地书/音频书等全部类型），
+    // 不再按类型过滤排除本地书——本地导入的小说也直接显示在书架上，
+    // 已分组的书只在对应分组文件夹内显示，不重复出现
     @Query(
         """
-        select * from books where type & ${BookType.text} > 0
-        and type & ${BookType.local} = 0
-        and ((SELECT sum(groupId) FROM book_groups where groupId > 0) & `group`) = 0
-        and (select show from book_groups where groupId = ${BookGroup.IdNetNone}) != 1
+        select * from books
+        where ((SELECT sum(groupId) FROM book_groups where groupId > 0) & `group`) = 0
         """
     )
     fun flowRoot(): Flow<List<Book>>

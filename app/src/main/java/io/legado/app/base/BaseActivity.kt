@@ -23,7 +23,10 @@ import io.legado.app.help.config.AppConfig
 import io.legado.app.help.config.ThemeConfig
 import io.legado.app.lib.theme.ThemeStore
 import io.legado.app.lib.theme.backgroundColor
+import io.legado.app.lib.theme.bottomBackground
+import io.legado.app.lib.theme.isDarkTheme
 import io.legado.app.lib.theme.primaryColor
+import io.legado.app.lib.theme.primaryColorDark
 import io.legado.app.ui.widget.TitleBar
 import io.legado.app.utils.ColorUtils
 import io.legado.app.utils.applyBackgroundTint
@@ -148,10 +151,13 @@ abstract class BaseActivity<VB : ViewBinding>(
             }
 
             else -> {
-                if (ColorUtils.isColorLight(primaryColor)) {
-                    setTheme(R.style.AppTheme_Light)
-                } else {
+                // 修改文件路径：BaseActivity.kt
+                // 改动说明：深浅风格改用 uiMode 判断（与资源解析同源，永不错位），
+                // 不再用半透明主色的亮度推断
+                if (isDarkTheme) {
                     setTheme(R.style.AppTheme_Dark)
+                } else {
+                    setTheme(R.style.AppTheme_Light)
                 }
                window.decorView.applyBackgroundTint(backgroundColor)
             }
@@ -176,8 +182,14 @@ abstract class BaseActivity<VB : ViewBinding>(
         if (fullScreen && !isInMultiWindow) {
             fullScreen()
         }
+        // 修改文件路径：BaseActivity.kt
+        // 改动说明：状态栏颜色改用实时解析的玻璃配色，不再读 ThemeStore 残留缓存
         val isTransparentStatusBar = AppConfig.isTransparentStatusBar
-        val statusBarColor = ThemeStore.statusBarColor(this, isTransparentStatusBar)
+        val statusBarColor = if (isTransparentStatusBar) {
+            primaryColor
+        } else {
+            primaryColorDark
+        }
         setStatusBarColorAuto(statusBarColor, isTransparentStatusBar, fullScreen)
         if (toolBarTheme == Theme.Dark) {
             setLightStatusBar(false)
@@ -188,10 +200,12 @@ abstract class BaseActivity<VB : ViewBinding>(
     }
 
     open fun upNavigationBarColor() {
+        // 修改文件路径：BaseActivity.kt
+        // 改动说明：导航栏颜色改用实时解析的玻璃卡片底色，不再读 ThemeStore 残留缓存
         if (AppConfig.immNavigationBar) {
-            setNavigationBarColorAuto(ThemeStore.navigationBarColor(this))
+            setNavigationBarColorAuto(bottomBackground)
         } else {
-            val nbColor = ColorUtils.darkenColor(ThemeStore.navigationBarColor(this))
+            val nbColor = ColorUtils.darkenColor(bottomBackground)
             setNavigationBarColorAuto(nbColor)
         }
     }

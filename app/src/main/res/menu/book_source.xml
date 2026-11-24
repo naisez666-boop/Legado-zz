@@ -139,6 +139,24 @@
         android:title="@string/menu_auto_group"
         app:showAsAction="never" />
 
+    <!-- 修改说明：新增「重新分类全部书源」，为所有书源按规则补全大类/细分标签，失效源归入「校验失败」 -->
+    <item
+        android:id="@+id/menu_reclassify"
+        android:title="@string/menu_reclassify"
+        app:showAsAction="never" />
+
+    <!-- 修改说明：新增「校验全部启用源」，一键联网校验所有启用状态的书源 -->
+    <item
+        android:id="@+id/menu_check_all_enabled"
+        android:title="@string/menu_check_all_enabled"
+        app:showAsAction="never" />
+
+    <!-- 修改说明：新增「书源广场」，从托管广场一键导入书源（自动进入导入流程并自动分组） -->
+    <item
+        android:id="@+id/menu_source_plaza"
+        android:title="@string/menu_source_plaza"
+        app:showAsAction="never" />
+
     <item
         android:id="@+id/menu_group_sources_by_domain"
         android:checkable="true"

@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import io.legado.app.R
 import io.legado.app.base.VMBaseActivity
 import io.legado.app.constant.AppLog
+import io.legado.app.constant.PlazaUrl
+import io.legado.app.utils.toastOnUi
 import io.legado.app.data.appDb
 import io.legado.app.data.entities.ReplaceRule
 import io.legado.app.databinding.ActivityReplaceRuleBinding
@@ -265,6 +267,28 @@ class ReplaceRuleActivity : VMBaseActivity<ActivityReplaceRuleBinding, ReplaceRu
             }
             R.id.menu_del_selection -> viewModel.delSelection(adapter.selection)
             R.id.menu_import_onLine -> showImportDialog()
+
+            // 修改文件路径：app/src/main/java/io/legado/app/ui/replace/ReplaceRuleActivity.kt
+            // 改动说明：新增「净化规则广场」——从托管广场地址一键拉取净化规则并进入导入流程；
+            // 广场地址可自定义，默认为用户仓库 plaza/replaceRules.json
+            R.id.menu_replace_plaza -> alert("净化规则广场") {
+                setMessage("从广场地址拉取净化规则列表后进入导入流程。")
+                val bindingView = DialogEditTextBinding.inflate(layoutInflater).apply {
+                    editView.setText(PlazaUrl.REPLACE_PLAZA)
+                    editView.hint = "广场地址(json)"
+                }
+                customView { bindingView.root }
+                okButton {
+                    val url = bindingView.editView.text?.toString()?.trim()
+                    if (url.isNullOrBlank()) {
+                        toastOnUi("广场地址不能为空")
+                    } else {
+                        showDialogFragment(ImportReplaceRuleDialog(url))
+                    }
+                }
+                cancelButton()
+            }
+
             R.id.menu_import_local -> importDoc.launch {
                 mode = HandleFileContract.FILE
                 allowExtensions = arrayOf("txt", "json")

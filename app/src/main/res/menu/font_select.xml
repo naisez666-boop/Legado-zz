@@ -7,6 +7,12 @@
         android:title="@string/default_font"
         app:showAsAction="ifRoom" />
 
+    <!-- 修改说明：新增「推荐字体」菜单，一键下载内置开源字体（思源黑体/宋体） -->
+    <item
+        android:id="@+id/menu_recommend"
+        android:title="@string/menu_recommend_font"
+        app:showAsAction="never" />
+
     <item
         android:id="@+id/menu_other"
         android:title="@string/other_folder"

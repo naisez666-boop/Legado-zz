@@ -9,6 +9,9 @@ import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import io.legado.app.R
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import java.util.concurrent.TimeUnit
 import io.legado.app.base.BaseDialogFragment
 import io.legado.app.constant.AppLog
 import io.legado.app.constant.PreferKey
@@ -115,11 +118,84 @@ class FontSelectDialog : BaseDialogFragment(R.layout.dialog_font_select),
                     }
                 }
             }
+
+            // 修改文件路径：app/src/main/java/io/legado/app/ui/font/FontSelectDialog.kt
+            // 改动说明：新增「推荐字体」——一键下载开源字体（思源黑体/宋体），
+            // 下载到应用私有 font 目录，完成后自动出现在字体列表
+            R.id.menu_recommend -> showRecommendFonts()
+
             R.id.menu_other -> {
                 openFolder()
             }
         }
         return true
+    }
+
+    /**
+     * 修改文件路径：FontSelectDialog.kt
+     * 改动说明：推荐字体数据类（名称 + 保存文件名 + 下载地址，均为 GitHub 官方仓库直链）
+     */
+    data class RecommendFont(val name: String, val fileName: String, val url: String)
+
+    private val recommendFonts = listOf(
+        RecommendFont(
+            "思源黑体 简中 常规",
+            "SourceHanSansCN-Regular.otf",
+            "https://github.com/adobe-fonts/source-han-sans/raw/release/SubsetOTF/CN/SourceHanSansCN-Regular.otf"
+        ),
+        RecommendFont(
+            "思源黑体 简中 粗体",
+            "SourceHanSansCN-Bold.otf",
+            "https://github.com/adobe-fonts/source-han-sans/raw/release/SubsetOTF/CN/SourceHanSansCN-Bold.otf"
+        ),
+        RecommendFont(
+            "思源宋体 简中 常规",
+            "SourceHanSerifCN-Regular.otf",
+            "https://github.com/adobe-fonts/source-han-serif/raw/release/SubsetOTF/CN/SourceHanSerifCN-Regular.otf"
+        )
+    )
+
+    private fun showRecommendFonts() {
+        alert(title = "推荐字体") {
+            setMessage("选择字体下载（约6~9MB），完成后自动出现在列表中")
+            items(recommendFonts.map { it.name }) { _, i ->
+                downloadFont(recommendFonts[i])
+            }
+            cancelButton()
+        }
+    }
+
+    private fun downloadFont(font: RecommendFont) {
+        toastOnUi("开始下载：${font.name}")
+        execute {
+            val dir = FileUtils.getPath(requireContext().externalFiles, "font")
+            val file = File(dir, font.fileName)
+            if (file.exists() && file.length() > 0) {
+                return@execute "${font.name} 已存在"
+            }
+            val client = OkHttpClient.Builder()
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .readTimeout(60, TimeUnit.SECONDS)
+                .build()
+            val response = client.newCall(Request.Builder().url(font.url).build()).execute()
+            if (!response.isSuccessful) {
+                throw Exception("HTTP ${response.code}")
+            }
+            response.body?.byteStream()?.use { input ->
+                file.outputStream().use { output ->
+                    input.copyTo(output)
+                }
+            } ?: throw Exception("下载内容为空")
+            "${font.name} 下载完成"
+        }.onSuccess {
+            toastOnUi(it)
+            // 刷新字体列表：合并已下载的本地字体
+            val cur = ArrayList(adapter.getItems().filterIsInstance<FileDoc>())
+            adapter.setItems(mergeFontItems(getLocalFonts(), cur))
+        }.onError {
+            AppLog.put("字体下载失败", it)
+            toastOnUi("字体下载失败：${it.localizedMessage}")
+        }
     }
 
     private fun openFolder() {

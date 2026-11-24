@@ -17,6 +17,7 @@ import io.legado.app.data.AppDatabase
 import io.legado.app.data.appDb
 import io.legado.app.databinding.FragmentSourceGroupBrowseBinding
 import io.legado.app.databinding.ItemSourceGroupBinding
+import io.legado.app.help.source.SourceGroupRules
 import io.legado.app.lib.theme.primaryColor
 import io.legado.app.utils.flowWithLifecycleAndDatabaseChange
 import io.legado.app.utils.setEdgeEffectColor
@@ -44,6 +45,62 @@ class SourceGroupBrowseFragment : BaseFragment(R.layout.fragment_source_group_br
 
     private val binding by viewBinding(FragmentSourceGroupBrowseBinding::bind)
     private val groupAdapter by lazy { GroupAdapter(requireContext()) }
+
+    /**
+     * 修改文件路径：SourceGroupBrowseFragment.kt
+     * 改动说明：「我的分类」固定排序——大类（小说/漫画/音频/影视/文件）→
+     * 细分小类（R18/要登录/校验失败/VIP付费/女频/男频/轻小说/官方正版/精校精排/全本/外文翻译）
+     * → 校验结果分组（校验超时/网站失效/js失效等，批量校验后一眼可见）
+     * → 待分配，按规则顺序置顶显示；
+     * 其余自定义分组排在后面，按源数量降序
+     */
+    private val myGroupOrder = listOf(
+        SourceGroupRules.GROUP_NOVEL,
+        SourceGroupRules.GROUP_MANGA,
+        SourceGroupRules.GROUP_AUDIO,
+        SourceGroupRules.GROUP_VIDEO,
+        SourceGroupRules.GROUP_FILE,
+        SourceGroupRules.GROUP_R18,
+        SourceGroupRules.GROUP_NEED_LOGIN,
+        SourceGroupRules.GROUP_CHECK_FAIL,
+        SourceGroupRules.GROUP_VIP,
+        SourceGroupRules.GROUP_FEMALE,
+        SourceGroupRules.GROUP_MALE,
+        SourceGroupRules.GROUP_LIGHT_NOVEL,
+        SourceGroupRules.GROUP_OFFICIAL,
+        SourceGroupRules.GROUP_FINE_EDIT,
+        SourceGroupRules.GROUP_FINISHED,
+        SourceGroupRules.GROUP_FOREIGN,
+        // 校验服务自动打上的失效标签（与 CheckSourceService 中的组名保持一致）
+        "校验超时",
+        "网站失效",
+        "js失效",
+        "域名失效",
+        "搜索失效",
+        "搜索链接规则为空",
+        "发现失效",
+        "发现规则为空",
+        "搜索目录失效",
+        "搜索正文失效",
+        "发现目录失效",
+        "发现正文失效",
+        SourceGroupRules.GROUP_TODO
+    )
+
+    private fun sortGroups(
+        counts: LinkedHashMap<String, Int>,
+        exploreCounts: LinkedHashMap<String, Int>
+    ): List<Triple<String, Int, Int>> {
+        val myGroups = counts.entries
+            .filter { myGroupOrder.contains(it.key) }
+            .sortedBy { myGroupOrder.indexOf(it.key) }
+        val otherGroups = counts.entries
+            .filterNot { myGroupOrder.contains(it.key) }
+            .sortedByDescending { it.value }
+        return (myGroups + otherGroups).map {
+            Triple(it.key, it.value, exploreCounts[it.key] ?: 0)
+        }
+    }
 
     override fun onFragmentCreated(view: View, savedInstanceState: Bundle?) {
         binding.rvGroup.setEdgeEffectColor(primaryColor)
@@ -77,8 +134,9 @@ class SourceGroupBrowseFragment : BaseFragment(R.layout.fragment_source_group_br
                                 }
                         }
                         groupAdapter.setItems(
-                            counts.entries.sortedByDescending { it.value }
-                                .map { Triple(it.key, it.value, exploreCounts[it.key] ?: 0) }
+                            // 修改说明：分组排序——「我的分类」固定置顶（大类→细分按规则顺序），
+                            // 其余自定义/原始分组排在后面按源数量降序，小分类一眼可见
+                            sortGroups(counts, exploreCounts)
                         )
                     }
             }

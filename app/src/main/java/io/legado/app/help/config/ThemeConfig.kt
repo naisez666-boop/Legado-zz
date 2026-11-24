@@ -33,6 +33,8 @@ import io.legado.app.utils.putPrefInt
 import io.legado.app.utils.putPrefString
 import io.legado.app.utils.stackBlur
 import splitties.init.appCtx
+import androidx.core.content.edit
+import io.legado.app.lib.theme.ThemeStorePrefKeys
 import java.io.File
 import androidx.core.graphics.drawable.toDrawable
 import io.legado.app.help.coroutine.Coroutine
@@ -78,13 +80,19 @@ object ThemeConfig {
         initNightMode()
     }
 
+    /**
+     * 修改文件路径：app/src/main/java/io/legado/app/help/config/ThemeConfig.kt
+     * 改动说明：修复亮暗主题「一会暗一会亮、时灵时不灵」——
+     * 1.旧逻辑把「跟随系统」固化成调用时刻的 YES/NO，系统切换亮暗后 App 不再跟随，
+     *   且不同时机调用会得到不同结果；现按主题模式返回正确模式：
+     *   跟随系统→FOLLOW_SYSTEM（交给系统实时跟随），亮色→NO，暗色→YES
+     */
     private fun initNightMode() {
-        val targetMode =
-            if (AppConfig.isNightTheme) {
-                AppCompatDelegate.MODE_NIGHT_YES
-            } else {
-                AppCompatDelegate.MODE_NIGHT_NO
-            }
+        val targetMode = when (AppConfig.themeMode) {
+            "1" -> AppCompatDelegate.MODE_NIGHT_NO
+            "2" -> AppCompatDelegate.MODE_NIGHT_YES
+            else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+        }
         AppCompatDelegate.setDefaultNightMode(targetMode)
     }
 
@@ -390,11 +398,23 @@ object ThemeConfig {
      * 更新主题
      * 修改文件路径：app/src/main/java/io/legado/app/help/config/ThemeConfig.kt
      * 改动说明：玻璃拟态主题下颜色全部由 MaterialValueHelper 实时解析资源获取，
-     * 不再把配色写入 ThemeStore 持久化缓存（旧逻辑会在亮暗切换瞬间缓存错模式的颜色，
-     * 导致一会暗一会亮、文字颜色错乱），此处不再需要应用任何颜色
+     * 不再把配色写入 ThemeStore 持久化缓存；此处负责清除旧版本残留的颜色缓存
+     * （升级用户 prefs 里可能存有旧版写入的棕/蓝灰配色，残留会导致部分界面颜色错乱）
      */
     fun applyTheme(context: Context) {
-        // 修改说明：空实现，保留入口以便日后扩展
+        ThemeStore.prefs(context).edit {
+            remove(ThemeStorePrefKeys.KEY_PRIMARY_COLOR)
+            remove(ThemeStorePrefKeys.KEY_PRIMARY_COLOR_DARK)
+            remove(ThemeStorePrefKeys.KEY_ACCENT_COLOR)
+            remove(ThemeStorePrefKeys.KEY_STATUS_BAR_COLOR)
+            remove(ThemeStorePrefKeys.KEY_NAVIGATION_BAR_COLOR)
+            remove(ThemeStorePrefKeys.KEY_BACKGROUND_COLOR)
+            remove(ThemeStorePrefKeys.KEY_BOTTOM_BACKGROUND)
+            remove(ThemeStorePrefKeys.KEY_TEXT_COLOR_PRIMARY)
+            remove(ThemeStorePrefKeys.KEY_TEXT_COLOR_PRIMARY_INVERSE)
+            remove(ThemeStorePrefKeys.KEY_TEXT_COLOR_SECONDARY)
+            remove(ThemeStorePrefKeys.KEY_TEXT_COLOR_SECONDARY_INVERSE)
+        }
     }
 
     fun clearBg(context: Context) {

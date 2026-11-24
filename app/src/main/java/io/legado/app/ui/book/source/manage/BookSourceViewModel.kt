@@ -93,6 +93,33 @@ class BookSourceViewModel(application: Application) : BaseViewModel(application)
         }
     }
 
+    /**
+     * 修改文件路径：app/src/main/java/io/legado/app/ui/book/source/manage/BookSourceViewModel.kt
+     * 改动说明：新增「重新分类全部书源」——对现有全部书源按规则补全大类/细分标签：
+     * 1.保留原有分组标签，只叠加缺失的大类与细分（含「校验失败」等小类）
+     * 2.搜索和发现规则都为空、无法补救的源自动归入「校验失败」细分
+     * 完成后通过回调返回处理数量
+     */
+    fun reclassifyAll(result: (Int) -> Unit) {
+        execute {
+            val sources = appDb.bookSourceDao.all
+            sources.forEach { source ->
+                val groups = linkedSetOf<String>()
+                source.bookSourceGroup
+                    ?.splitNotBlank(AppPattern.splitGroupRegex)
+                    ?.forEach { groups.add(it) }
+                SourceGroupRules.classify(source)
+                    .splitNotBlank(AppPattern.splitGroupRegex)
+                    .forEach { groups.add(it) }
+                source.bookSourceGroup = groups.joinToString(",")
+            }
+            if (sources.isNotEmpty()) {
+                appDb.bookSourceDao.update(*sources.toTypedArray())
+            }
+            result(sources.size)
+        }
+    }
+
     fun upOrder(items: List<BookSourcePart>) {
         if (items.isEmpty()) return
         execute {

@@ -1212,6 +1212,11 @@
     <!-- 修改文件路径：app/src/main/res/values/strings.xml
          改动说明：新增「自动分组」菜单文字 -->
     <string name="menu_auto_group">自动分组</string>
+    <string name="menu_reclassify">重新分类全部书源</string>
+    <string name="menu_check_all_enabled">校验全部启用源</string>
+    <string name="menu_recommend_font">推荐字体</string>
+    <string name="menu_source_plaza">书源广场</string>
+    <string name="menu_replace_plaza">净化规则广场</string>
     <!-- 修改说明：书源分组浏览条目数量文字 -->
     <string name="source_group_count">%1$d个源</string>
     <string name="theme_config">主题配置</string>

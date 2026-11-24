@@ -54,6 +54,13 @@
         android:title="@string/import_on_line"
         app:showAsAction="never" />
 
+    <!-- 修改说明：新增「净化规则广场」，从托管广场一键导入净化替换规则 -->
+    <item
+        android:id="@+id/menu_replace_plaza"
+        android:icon="@drawable/ic_import"
+        android:title="@string/menu_replace_plaza"
+        app:showAsAction="never" />
+
     <item
         android:id="@+id/menu_import_qr"
         android:icon="@drawable/ic_import"

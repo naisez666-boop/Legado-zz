@@ -159,12 +159,18 @@ object AppConfig : SharedPreferences.OnSharedPreferenceChangeListener {
                 ?.getOrNull()
         }
 
+    // 修改文件路径：app/src/main/java/io/legado/app/help/config/AppConfig.kt
+    // 改动说明：「跟随系统」分支改读应用当前 uiMode（AppCompatDelegate 会同步应用配置），
+    // 不再用 Resources.getSystem() 快照——部分 ROM 该快照不实时更新，导致深浅判断漂移
     var isNightTheme: Boolean
         get() = when (themeMode) {
             "1" -> false
             "2" -> true
             "3" -> false
-            else -> sysConfiguration.isNightMode
+            else -> appCtx.resources.configuration.let {
+                (it.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
+                    android.content.res.Configuration.UI_MODE_NIGHT_YES
+            }
         }
         set(value) {
             if (isNightTheme != value) {
@@ -491,7 +497,10 @@ object AppConfig : SharedPreferences.OnSharedPreferenceChangeListener {
         }
 
     var changeSourceLoadWordCount: Boolean
-        get() = appCtx.getPrefBoolean(PreferKey.changeSourceLoadWordCount)
+        // 修改文件路径：app/src/main/java/io/legado/app/help/config/AppConfig.kt
+        // 改动说明：换源顺滑化——默认开启换源列表的字数/响应时间加载，
+        // 让每个源的最新章节、字数、响应时间默认可见，便于直接挑选有效源
+        get() = appCtx.getPrefBoolean(PreferKey.changeSourceLoadWordCount, true)
         set(value) {
             appCtx.putPrefBoolean(PreferKey.changeSourceLoadWordCount, value)
         }

@@ -76,6 +76,11 @@ class BookshelfFragment2() : BaseBookshelfFragment(R.layout.fragment_bookshelf2)
     private var itemCount = 0
     private var totalRows = 0
 
+    // 修改文件路径：app/src/main/java/io/legado/app/ui/main/bookshelf/style2/BookshelfFragment2.kt
+    // 改动说明：书架内搜索——顶栏搜索框输入时实时过滤当前书架（书名/作者/分组名），
+    // 清空后恢复完整书架；提交搜索词则跳转在线搜索
+    private var filterKey: String = ""
+
     override fun onFragmentCreated(view: View, savedInstanceState: Bundle?) {
         setSupportToolbar(binding.titleBar.toolbar)
         initRecyclerView()
@@ -236,6 +241,10 @@ class BookshelfFragment2() : BaseBookshelfFragment(R.layout.fragment_bookshelf2)
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {
+        // 修改文件路径：BookshelfFragment2.kt
+        // 改动说明：输入即过滤书架，支持书名/作者/分组名（分组名匹配时组内书籍也算命中）
+        filterKey = newText?.trim() ?: ""
+        booksAdapter.updateItems(groupId)
         return false
     }
 
@@ -282,6 +291,23 @@ class BookshelfFragment2() : BaseBookshelfFragment(R.layout.fragment_bookshelf2)
     }
 
     override fun getItems(): List<Any> {
+        // 修改文件路径：BookshelfFragment2.kt
+        // 改动说明：书架内搜索过滤——匹配书名/作者/所属分组名，分组文件夹按组名匹配
+        val key = filterKey
+        if (key.isNotEmpty()) {
+            val matchedGroups = if (groupId == BookGroup.IdRoot) {
+                bookGroups.filter { it.groupName.contains(key, true) }
+            } else {
+                emptyList()
+            }
+            val matchedBooks = books.filter { b ->
+                b.name.contains(key, true) || b.author.contains(key, true) ||
+                    bookGroups.any { g ->
+                        g.groupName.contains(key, true) && (b.group.toLong() and g.groupId) != 0L
+                    }
+            }
+            return matchedGroups + matchedBooks
+        }
         if (groupId != BookGroup.IdRoot) {
             return books
         }

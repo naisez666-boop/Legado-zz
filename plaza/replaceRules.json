@@ -1,0 +1,47 @@
+[
+  {
+    "id": -101,
+    "name": "去推广文字",
+    "group": "净化",
+    "pattern": "(天才一秒记住.*|本站最新网址.*|最新章节.*|首发地址.*|为您推荐.*|求收藏.*|求推荐票.*|求月票.*|手打全字.*|更新最快.*|章节错误.*|请刷新页面.*|请记住本书.*|加入书签.*|方便阅读.*|\\(第\\d+/\\d+页\\))",
+    "replacement": "",
+    "scope": ".*",
+    "scopeTitle": false,
+    "scopeContent": true,
+    "excludeScope": null,
+    "isEnabled": true,
+    "isRegex": true,
+    "timeoutMillisecond": 3000,
+    "order": 100
+  },
+  {
+    "id": -102,
+    "name": "去版权头尾",
+    "group": "净化",
+    "pattern": "^\\s*([\\s\\S]{0,200}?(www\\.|com|net|cc|org|net)[\\s\\S]{0,100}?)\\s*$",
+    "replacement": "",
+    "scope": ".*",
+    "scopeTitle": false,
+    "scopeContent": true,
+    "excludeScope": null,
+    "isEnabled": true,
+    "isRegex": true,
+    "timeoutMillisecond": 3000,
+    "order": 101
+  },
+  {
+    "id": -103,
+    "name": "去空行",
+    "group": "净化",
+    "pattern": "\\n+",
+    "replacement": "\n",
+    "scope": ".*",
+    "scopeTitle": false,
+    "scopeContent": true,
+    "excludeScope": null,
+    "isEnabled": false,
+    "isRegex": true,
+    "timeoutMillisecond": 3000,
+    "order": 102
+  }
+]
