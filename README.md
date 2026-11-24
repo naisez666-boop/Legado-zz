@@ -1,120 +1,76 @@
 <div align="center">
-<img width="125" height="125" src="https://gitee.com/lyc486/legado/raw/main/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" alt="legado"/>
+<img width="125" height="125" src="app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" alt="legado"/>
 <br>
-阅读Sigma
+**Legado-zz · 个人定制版阅读**
 <br>
-阅读Sigma继承自<a href="https://github.com/gedoor/legado" target="_blank">Legado</a>，延续开源阅读项目，在其基础上新增更多功能。
+基于开源阅读 [Legado](https://github.com/gedoor/legado) 的个人自用定制版，界面全新玻璃拟态风格，分组体验大幅优化。
 </div>
 
-## 版本说明
-- 测试版(beta)：包名与Legado原版相同，可覆盖更新，版本更新频繁
-- 正式版(plus)：新的共存包名，安装后是一个新软件，不会覆盖Legado原版，每到一个稳定阶段进行一次更新
-#### 找不到下载地址可以去这里 [下载软件](https://gitee.com/lyc486/legado/releases)
+## 下载
 
-[![](https://img.shields.io/badge/-Contents:-696969.svg)](#contents) [![](https://img.shields.io/badge/-Function-F5F5F5.svg)](#Function-主要功能-) [![](https://img.shields.io/badge/-Community-F5F5F5.svg)](#Community-交流社区-) [![](https://img.shields.io/badge/-API-F5F5F5.svg)](#API-) [![](https://img.shields.io/badge/-Other-F5F5F5.svg)](#Other-其他-) [![](https://img.shields.io/badge/-Grateful-F5F5F5.svg)](#Grateful-感谢-) [![](https://img.shields.io/badge/-Interface-F5F5F5.svg)](#Interface-界面-)
+[![GitHub Release](https://img.shields.io/badge/%E4%B8%8B%E8%BD%BD%E6%9C%80%E6%96%B0APK-Releases-blue)](https://github.com/naisez666-boop/Legado-zz/releases)
 
->新用户？
->
->软件不提供内容，需要您自己手动添加，例如导入书源等。  
->看看 [帮助文档](https://www.yuque.com/legado/wiki)，也许里面就有你要的答案。
+- APK 由 GitHub Actions 自动构建发布，每次代码更新后自动打最新包
+- 版本号格式：`3.年月日时.提交数`（如 `3.26.112410.1523`），每次更新版本号可见变化
+- 应用内「关于 → 检查更新」可直接检测并跳转本仓库 Releases
 
-# Function-主要功能 [![](https://img.shields.io/badge/-Function-F5F5F5.svg)](#Function-主要功能-)
+## 定制功能
 
-<details><summary>原版</summary>
-1.自定义书源，自己设置规则，抓取网页数据，规则简单易懂，软件内有规则说明。<br>
-2.列表书架，网格书架自由切换。<br>
-3.书源规则支持搜索及发现，所有找书看书功能全部自定义，找书更方便。<br>
-4.订阅内容,可以订阅想看的任何内容,看你想看<br>
-5.支持替换净化，去除广告替换内容很方便。<br>
-6.支持本地TXT、EPUB阅读，手动浏览，智能扫描。<br>
-7.支持高度自定义阅读界面，切换字体、颜色、背景、行距、段距、加粗、简繁转换等。<br>
-8.支持多种翻页模式，覆盖、仿真、滑动、滚动等。<br>
-9.软件开源，持续优化，无广告。
-</details>
+### 界面
+- **玻璃拟态主题**：半透明磨砂卡片 + 霓虹紫蓝强调色，深浅两套配色跟随系统自动切换
+- **亮暗手动切换**：「我的 → 主题模式」可选跟随系统 / 亮色 / 暗色
+- **层级清晰的分组界面**：进入分组后顶栏显示返回箭头 + 当前分组名，返回即回分组列表
+- 卡片化列表：书架分组、书源分组、书源列表、发现页统一圆角玻璃卡片
 
-<details><summary>延续</summary>
-1.带歌词的音频播放功能。<br>
-2.带弹幕的视频播放功能。<br>
-3.更方便的书源编辑。<br>
-4.更丰富的书源功能实现。<br>
-5.更完善的订阅源功能。<br>
-</details>
+### 书架
+- 番茄式分组混排：分组文件夹与书籍混排展示，分组文件夹支持四宫格封面拼图
+- 书籍分组唯一，根界面隐藏「全部/本地/音频/视频」等系统虚拟分组，只显示真实分组
+- 顶栏新增阅读历史入口
 
-<a href="#readme">
-    <img src="https://img.shields.io/badge/-返回顶部-orange.svg" alt="#" align="right">
-</a>
+### 发现页
+- 分组模式：默认显示发现分组列表，点进分组后显示组内发现源与目录
 
-# Community-交流社区 [![](https://img.shields.io/badge/-Community-F5F5F5.svg)](#Community-交流社区-)
+### 书源管理
+- 分组浏览：默认显示所有分组列表（源数量 + 有发现数量一目了然）
+- 自动分组：导入书源自动进入「待分配」，一键按大类 + 细分规则自动归类
+- 新建分组 + 手动归组：勾选书源后通过底部菜单「加入分组」自由整理
+- 分组与发现页天然同步：分组内带发现页的书源自动出现在发现页对应分组
 
-#### Telegram
-[![Telegram-channel](https://img.shields.io/badge/Σ_Telegram-%E9%A2%91%E9%81%93-blue)](https://t.me/readsigma)
+## 原版主要功能
 
-#### WeChat
-[![WeChat-channel](https://img.shields.io/badge/Σ_%e5%be%ae%e4%bf%a1-%e5%85%ac%e4%bc%97%e5%8f%b7-green)](https://mp.weixin.qq.com/mp/appmsgalbum?action=getalbum&album_id=4345046964963590147)  
-<img src="https://open.weixin.qq.com/qr/code?username=legado_plus" width="100">
+1. 自定义书源，自己设置规则，抓取网页数据，规则简单易懂，软件内有规则说明
+2. 列表书架，网格书架自由切换
+3. 书源规则支持搜索及发现，所有找书看书功能全部自定义
+4. 订阅内容，可以订阅想看的任何内容
+5. 支持替换净化，去除广告替换内容很方便
+6. 支持本地 TXT、EPUB 阅读，手动浏览，智能扫描
+7. 高度自定义阅读界面：字体、颜色、背景、行距、段距、加粗、简繁转换等
+8. 多种翻页模式：覆盖、仿真、滑动、滚动等
+9. 软件开源，无广告
 
-#### Discord
-[![Discord](https://img.shields.io/discord/560731361414086666?color=%235865f2&label=Discord)](https://discord.gg/VtUfRyzRXn)
+> 新用户？软件不提供内容，需要您自己手动添加书源。可参考 [帮助文档](https://www.yuque.com/legado/wiki)。
 
-#### Other
-https://www.yuque.com/legado/wiki/community
+## API
 
-<a href="#readme">
-    <img src="https://img.shields.io/badge/-返回顶部-orange.svg" alt="#" align="right">
-</a>
+* 阅读3.0 提供了 2 种方式的 API：`Web 方式`和 `Content Provider 方式`，详见 [api.md](api.md)
+* 可通过 url 唤起阅读进行一键导入，url 格式: `legado://import/{path}?src={url}`
+* path 类型: bookSource, rssSource, replaceRule, textTocRule, httpTTS, theme, readConfig, dictRule, addToBookshelf
+* path 类型解释: 书源, 订阅源, 替换规则, 本地 txt 小说目录规则, 在线朗读引擎, 主题, 阅读排版, 添加到书架
 
-# API [![](https://img.shields.io/badge/-API-F5F5F5.svg)](#API-)
-* 阅读3.0 提供了2种方式的API：`Web方式`和`Content Provider方式`。您可以在[这里](api.md)根据需要自行调用。 
-* 可通过url唤起阅读进行一键导入,url格式: legado://import/{path}?src={url}
-* path类型: bookSource,rssSource,replaceRule,textTocRule,httpTTS,theme,readConfig,dictRule,[addToBookshelf](/app/src/main/java/io/legado/app/ui/association/AddToBookshelfDialog.kt)
-* path类型解释: 书源,订阅源,替换规则,本地txt小说目录规则,在线朗读引擎,主题,阅读排版,添加到书架
+## 免责声明
 
-<a href="#readme">
-    <img src="https://img.shields.io/badge/-返回顶部-orange.svg" alt="#" align="right">
-</a>
+本软件依赖系统 webview 提供网页访问功能，通过用户自定义的第三方网页书源返回阅读内容，对其返回内容概不负责，亦不承担任何法律责任。任何第三方网页书源均系他人制作或提供，非软件作者。您应该对搜索到的结果自行承担风险。
 
-# Other-其他 [![](https://img.shields.io/badge/-Other-F5F5F5.svg)](#Other-其他-)  
+## 构建
 
-<details><summary>免责声明</summary>
-阅读依赖系统webview提供网页访问功能，通过用户自定义的第三方网页书源返回阅读内容，阅读对其返回内容概不负责，亦不承担任何法律责任。任何第三方网页书源均系他人制作或提供，非软件作者，阅读对其合法性概不负责，亦不承担任何法律责任。第三方网页书源提供的试读，不代表阅读赞成其内容或立场。您应该对用搜索到的结果自行承担风险。<br>
-任何单位或个人认为第三方网页书源内容可能涉嫌侵犯其信息网络传播权，应该及时向阅读提出书权力通知，并提供身份证明、权属证明及详细侵权情况证明。阅读在收到上述法律文件后，将会依法尽快屏蔽相关内容。<br>
-</details>
+```bash
+.\gradlew.bat :app:assembleAppRelease
+```
 
-##### 阅读3.0
-* [书源规则](https://mgz0227.github.io/The-tutorial-of-Legado/)
-* [更新日志](/app/src/main/assets/updateLog.md)
-* [帮助文档](/app/src/main/assets/web/help/md/appHelp.md)
+推送代码到 main 分支后，GitHub Actions 会自动构建并发布 Release APK。
 
-<a href="#readme">
-    <img src="https://img.shields.io/badge/-返回顶部-orange.svg" alt="#" align="right">
-</a>
+## 感谢
 
-# Grateful-感谢 [![](https://img.shields.io/badge/-Grateful-F5F5F5.svg)](#Grateful-感谢-)
-> * org.jsoup:jsoup
-> * cn.wanghaomiao:JsoupXpath
-> * com.jayway.jsonpath:json-path
-> * com.github.gedoor:rhino-android
-> * com.squareup.okhttp3:okhttp
-> * com.github.bumptech.glide:glide
-> * org.nanohttpd:nanohttpd
-> * org.nanohttpd:nanohttpd-websocket
-> * cn.bingoogolapple:bga-qrcode-zxing
-> * com.jaredrummler:colorpicker
-> * org.apache.commons:commons-text
-> * io.noties.markwon:core
-> * io.noties.markwon:image-glide
-> * com.hankcs:hanlp
-> * com.positiondev.epublib:epublib-core
-> * com.github.Moriafly:LyricViewX
-> * io.github.rosemoe:editor
-<a href="#readme">
-    <img src="https://img.shields.io/badge/-返回顶部-orange.svg" alt="#" align="right">
-</a>
+基于 [gedoor/legado](https://github.com/gedoor/legado) 及各衍生版本，感谢原作者与社区贡献者，以及以下开源库：
 
-# Interface-界面 [![](https://img.shields.io/badge/-Interface-F5F5F5.svg)](#Interface-界面-)
-<img src="https://channel.qpic.cn/psc?/channel/NaDwC23LjvXqrn3RH.9z8bdVVU8X7gejuELokmv2DGfJwQpP2UFcwHqqFK4nzfgNUTL6Wij4QqsJySkoPfQuCB1l5MstXCXWjmH5Mm6PGkU!/b=&bo=UQRICVEESAkWADA!&ek=1&tl=1" width="270">  <img src="https://channel.qpic.cn/psc?/channel/NaDwC23LjvXqrn3RH.9z8epqbe*Bzro*ybEEVmlLpuD9E14zFMjtRx2JeZJdVzNYeSZqCm5Kv0MruAumEe0tJ77n*agIEzJIaSN9VHAen2I!/b=&bo=UQRICVEESAkWADA!&ek=1&tl=1" width="270">  
-<img src="https://channel.qpic.cn/psc?/channel/NaDwC23LjvXqrn3RH.9z8SQggDiubhwWyktI5v48VluvK1vwdY2OV9RauO04TcXb4425kVcBiAz2DhpfnrDZKnSpwp8SLnDtKOxtLm1yP9I!/b=&bo=UQRICVEESAkWADA!&ek=1&tl=1" width="270">  <img src="https://channel.qpic.cn/psc?/channel/NaDwC23LjvXqrn3RH.9z8Tx.7oqZyCeAdzSVQa6ZgtXKE*EaUCdEJ3zm2ynIrgem10TqY8aKvSbG3v5FNNHtwSFyN5QfLW*Zd14gUetfsC8!/b=&bo=UgRKCVIESgkWADA!&ek=1&tl=1" width="270">
-
-<a href="#readme">
-    <img src="https://img.shields.io/badge/-返回顶部-orange.svg" alt="#" align="right">
-</a>
+jsoup · JsoupXpath · json-path · rhino-android · okhttp · glide · nanohttpd · bga-qrcode-zxing · commons-text · markwon · hanlp · epublib · LyricViewX · editor
