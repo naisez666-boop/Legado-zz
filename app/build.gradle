@@ -20,8 +20,11 @@ static def releaseTime() {
 }
 
 def name = "legado"
-def version = "3." + releaseTime()
 def gitCommits = Integer.parseInt('git rev-list HEAD --count'.execute().text.trim())
+// 修改文件路径：app/build.gradle
+// 改动说明：versionName 末尾追加 git 提交数（如 3.26.112410.1523），
+// 保证每次更新提交后版本号都可见地变化；versionCode 同样随提交数递增
+def version = "3." + releaseTime() + "." + gitCommits
 
 android {
     compileSdk = compile_sdk_version
