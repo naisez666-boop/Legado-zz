@@ -8,8 +8,8 @@
     <!-- 顶栏/控件主色：90%透明白玻璃 -->
     <color name="primary">#D9FFFFFF</color>
     <color name="primaryDark">#E6E8EFFF</color>
-    <!-- 强调色：霓虹紫蓝 -->
-    <color name="accent">#FF6558F0</color>
+    <!-- 强调色：深靛蓝（由霓虹紫蓝 #FF6558F0 加深，降低荧光感，与纯黑正文更协调） -->
+    <color name="accent">#FF4C43D6</color>
 
     <color name="disabled">@color/md_light_disabled</color>
 
@@ -52,8 +52,9 @@
     <color name="tv_btn_normal_black">#737373</color>
     <color name="tv_btn_press_black">#adadad</color>
 
-    <color name="primaryText">#DE16161E</color>
-    <color name="secondaryText">#8A16161E</color>
+    <!-- 修改说明：主文字提亮为不透明近纯黑，副文字提至 70% 不透明，增强与玻璃卡片对比 -->
+    <color name="primaryText">#FF16161E</color>
+    <color name="secondaryText">#B316161E</color>
     <color name="tv_text_summary">#8A2C2C2C</color>
     <color name="tv_text_book_detail">#dfdfdf</color>
     <color name="menu_color_default">#383838</color>

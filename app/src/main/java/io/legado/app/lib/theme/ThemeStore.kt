@@ -10,6 +10,7 @@ import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
 import io.legado.app.R
+import io.legado.app.help.config.AppConfig
 import io.legado.app.utils.ColorUtils
 import splitties.init.appCtx
 import androidx.core.graphics.toColorInt
@@ -212,8 +213,13 @@ private constructor(private val mContext: Context) : ThemeStoreInterface {
         @CheckResult
         @ColorInt
         fun accentColor(context: Context = appCtx): Int {
-            // 修改说明：同上，实时解析资源色
-            return ContextCompat.getColor(context, R.color.accent)
+            // 修改说明：实时解析资源色；墨水屏模式下改纯黑，
+            // 避免彩色强调色在墨水屏灰阶显示发灰（与 MaterialValueHelper.accentColor 保持一致）
+            return if (AppConfig.isEInkMode) {
+                if (context.isDarkTheme) Color.WHITE else Color.BLACK
+            } else {
+                ContextCompat.getColor(context, R.color.accent)
+            }
         }
 
         @CheckResult

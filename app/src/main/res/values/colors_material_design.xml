@@ -10,11 +10,13 @@
     <color name="md_light_dividers">#1F000000</color>
     <!-- 38% -->
     <color name="md_light_disabled">#61000000</color>
-    <!-- 54% -->
-    <color name="md_light_secondary">#8A000000</color>
-    <color name="md_light_primary_icon">#8A000000</color>
-    <!-- 87% -->
-    <color name="md_light_primary_text">#DE000000</color>
+    <!-- 修改文件路径：app/src/main/res/values/colors_material_design.xml
+         改动说明：浅背景主/副文字对比度提升——主文字 87%黑→纯黑，副文字 54%黑→70%黑，
+         解决玻璃浅色主题下文字偏灰、与半透明卡片对比度不够的问题 -->
+    <color name="md_light_secondary">#B3000000</color>
+    <color name="md_light_primary_icon">#B3000000</color>
+    <!-- 100% -->
+    <color name="md_light_primary_text">#FF000000</color>
     <!-- other specifications -->
     <color name="md_light_statusbar">@color/md_grey_300</color>
     <color name="md_light_appbar">@color/md_grey_100</color>

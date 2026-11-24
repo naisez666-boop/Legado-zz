@@ -81,7 +81,14 @@ val Context.primaryColorDark: Int
     get() = ContextCompat.getColor(this, R.color.primaryDark)
 
 val Context.accentColor: Int
-    get() = ContextCompat.getColor(this, R.color.accent)
+    // 修改说明：墨水屏模式下强调色改纯黑——彩色强调色（靛蓝）在墨水屏灰阶显示
+    // 会发灰发脏，纯黑在浅色背景上对比最清晰；Fragment.accentColor 委托本属性同样生效
+    get() = if (AppConfig.isEInkMode) {
+        // 墨水屏深色模式下底色为深色，强调色用纯白保持对比
+        if (isDarkTheme) android.graphics.Color.WHITE else android.graphics.Color.BLACK
+    } else {
+        ContextCompat.getColor(this, R.color.accent)
+    }
 
 val Context.backgroundColor: Int
     get() = ContextCompat.getColor(this, R.color.background)
