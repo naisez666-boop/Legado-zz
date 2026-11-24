@@ -69,6 +69,13 @@
 
 推送代码到 main 分支后，GitHub Actions 会自动构建并发布 Release APK。
 
+## 界面预览
+
+<img src="https://channel.qpic.cn/psc?/channel/NaDwC23LjvXqrn3RH.9z8bdVVU8X7gejuELokmv2DGfJwQpP2UFcwHqqFK4nzfgNUTL6Wij4QqsJySkoPfQuCB1l5MstXCXWjmH5Mm6PGkU!/b=&bo=UQRICVEESAkWADA!&ek=1&tl=1" width="270">  <img src="https://channel.qpic.cn/psc?/channel/NaDwC23LjvXqrn3RH.9z8epqbe*Bzro*ybEEVmlLpuD9E14zFMjtRx2JeZJdVzNYeSZqCm5Kv0MruAumEe0tJ77n*agIEzJIaSN9VHAen2I!/b=&bo=UQRICVEESAkWADA!&ek=1&tl=1" width="270">  
+<img src="https://channel.qpic.cn/psc?/channel/NaDwC23LjvXqrn3RH.9z8SQggDiubhwWyktI5v48VluvK1vwdY2OV9RauO04TcXb4425kVcBiAz2DhpfnrDZKnSpwp8SLnDtKOxtLm1yP9I!/b=&bo=UQRICVEESAkWADA!&ek=1&tl=1" width="270">  <img src="https://channel.qpic.cn/psc?/channel/NaDwC23LjvXqrn3RH.9z8Tx.7oqZyCeAdzSVQa6ZgtXKE*EaUCdEJ3zm2ynIrgem10TqY8aKvSbG3v5FNNHtwSFyN5QfLW*Zd14gUetfsC8!/b=&bo=UgRKCVIESgkWADA!&ek=1&tl=1" width="270">
+
+> 以上为沿用预览图，后续可替换为本定制版实际截图。
+
 ## 感谢
 
 基于 [gedoor/legado](https://github.com/gedoor/legado) 及各衍生版本，感谢原作者与社区贡献者，以及以下开源库：
