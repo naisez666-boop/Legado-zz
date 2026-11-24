@@ -388,6 +388,11 @@ object ThemeConfig {
 
     /**
      * 更新主题
+     * 修改文件路径：app/src/main/java/io/legado/app/help/config/ThemeConfig.kt
+     * 改动说明：玻璃拟态主题接管全局配色——
+     * 不再读取旧版自定义配色(cPrimary等)，统一使用 colors.xml/values-night 中的
+     * 玻璃配色资源（primary/accent/background/background_card，自动跟随深浅色），
+     * 保留 E-Ink 墨水屏分支
      */
     fun applyTheme(context: Context) = with(context) {
         when {
@@ -401,50 +406,19 @@ object ThemeConfig {
                     .apply()
             }
 
-            AppConfig.isNightTheme -> {
-                val primary =
-                    getPrefInt(PreferKey.cNPrimary, getCompatColor(R.color.md_blue_grey_600))
-                val accent =
-                    getPrefInt(PreferKey.cNAccent, getCompatColor(R.color.md_deep_orange_800))
-                var background =
-                    getPrefInt(PreferKey.cNBackground, getCompatColor(R.color.md_grey_900))
-                if (ColorUtils.isColorLight(background)) {
-                    background = getCompatColor(R.color.md_grey_900)
-                    putPrefInt(PreferKey.cNBackground, background)
-                }
-                val bBackground =
-                    getPrefInt(PreferKey.cNBBackground, getCompatColor(R.color.md_grey_850))
-                val transparentNavBar =
-                    getPrefBoolean(PreferKey.tNavBarN, false)
-                ThemeStore.editTheme(this)
-                    .primaryColor(ColorUtils.withAlpha(primary, 1f))
-                    .accentColor(ColorUtils.withAlpha(accent, 1f))
-                    .backgroundColor(ColorUtils.withAlpha(background, 1f))
-                    .bottomBackground(ColorUtils.withAlpha(bBackground, 1f))
-                    .transparentNavBar(transparentNavBar)
-                    .apply()
-            }
-
             else -> {
-                val primary =
-                    getPrefInt(PreferKey.cPrimary, getCompatColor(R.color.md_brown_500))
-                val accent =
-                    getPrefInt(PreferKey.cAccent, getCompatColor(R.color.md_red_600))
-                var background =
-                    getPrefInt(PreferKey.cBackground, getCompatColor(R.color.md_grey_100))
-                if (!ColorUtils.isColorLight(background)) {
-                    background = getCompatColor(R.color.md_grey_100)
-                    putPrefInt(PreferKey.cBackground, background)
-                }
-                val bBackground =
-                    getPrefInt(PreferKey.cBBackground, getCompatColor(R.color.md_grey_200))
+                // 修改说明：直接取玻璃配色资源（values-night 自动切换深浅色），保留半透明效果
+                val primary = getCompatColor(R.color.primary)
+                val accent = getCompatColor(R.color.accent)
+                val background = getCompatColor(R.color.background)
+                val bBackground = getCompatColor(R.color.background_card)
                 val transparentNavBar =
                     getPrefBoolean(PreferKey.tNavBar, false)
                 ThemeStore.editTheme(this)
-                    .primaryColor(ColorUtils.withAlpha(primary, 1f))
-                    .accentColor(ColorUtils.withAlpha(accent, 1f))
-                    .backgroundColor(ColorUtils.withAlpha(background, 1f))
-                    .bottomBackground(ColorUtils.withAlpha(bBackground, 1f))
+                    .primaryColor(primary)
+                    .accentColor(accent)
+                    .backgroundColor(background)
+                    .bottomBackground(bBackground)
                     .transparentNavBar(transparentNavBar)
                     .apply()
             }

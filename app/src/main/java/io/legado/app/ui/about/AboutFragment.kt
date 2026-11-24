@@ -85,10 +85,13 @@ class AboutFragment : PreferenceFragmentCompat() {
 
     /**
      * 检测更新
+     * 修改文件路径：app/src/main/java/io/legado/app/ui/about/AboutFragment.kt
+     * 改动说明：改用 GitHub 检查更新（naisez666-boop/Legado-zz Releases），
+     * 原版 gitee 更新源指向他人仓库已弃用
      */
     private fun checkUpdate() {
         waitDialog.show()
-        AppUpdate.giteeUpdate.run {
+        AppUpdate.gitHubUpdate?.run {
             check(lifecycleScope)
                 .onSuccess {
                     showDialogFragment(

@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- 修改文件路径：app/src/main/res/drawable/bg_popup_menu.xml
+     改动说明：弹出菜单背景玻璃拟态化——半透明菜单底色 + 16dp 大圆角 -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
        android:shape="rectangle">
 
     <solid android:color="@color/background_menu"/>
 
-    <corners android:radius="2dp"/>
+    <corners android:radius="16dp"/>
 
 </shape>

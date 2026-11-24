@@ -1,20 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- 修改文件路径：app/src/main/res/layout/fragment_source_group_browse.xml（新增）
-     用途：书源管理「分组浏览」界面——默认显示所有书源分组列表，
-     点击分组后由 Activity 切换为该分组的书源列表 -->
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     用途：书源管理「分组浏览」界面——顶部「新建分组」入口 +
+     所有书源分组列表（组名 + 源数量 + 发现数量），点击分组由 Activity 切换为该分组的书源列表 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?android:attr/colorBackground">
+    android:background="?android:attr/colorBackground"
+    android:orientation="vertical">
+
+    <!-- 修改说明：顶部新建分组入口，玻璃卡片样式 + 强调紫色文字 -->
+    <TextView
+        android:id="@+id/btn_add_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_glass_card"
+        android:foreground="?attr/selectableItemBackground"
+        android:gravity="center"
+        android:paddingTop="14dp"
+        android:paddingBottom="14dp"
+        android:text="＋ 新建分组"
+        android:textColor="@color/accent"
+        android:textSize="15sp"
+        android:textStyle="bold" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_group"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
         android:clipToPadding="false"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         xmlns:app="http://schemas.android.com/apk/res-auto" />
 
-</FrameLayout>
+</LinearLayout>

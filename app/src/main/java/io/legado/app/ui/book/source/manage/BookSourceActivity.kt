@@ -46,7 +46,6 @@ import io.legado.app.ui.qrcode.QrCodeResult
 import io.legado.app.ui.widget.SelectActionBar
 import io.legado.app.ui.widget.recycler.DragSelectTouchHelper
 import io.legado.app.ui.widget.recycler.ItemTouchCallback
-import io.legado.app.ui.widget.recycler.VerticalDivider
 import io.legado.app.utils.ACache
 import io.legado.app.utils.NetworkUtils
 import io.legado.app.utils.StringUtils
@@ -220,6 +219,31 @@ class BookSourceActivity : VMBaseActivity<ActivityBookSourceBinding, BookSourceV
         binding.titleBar.title = name
     }
 
+    /**
+     * 修改文件路径：BookSourceActivity.kt
+     * 改动说明：分组浏览「新建分组」回调——输入组名后回到书源列表，
+     * 勾选源后点底部菜单「加入分组」即可把源归入新分组；
+     * 分组即书源标签，组内带发现页的源会自动出现在发现页对应分组（与发现分组同步）
+     */
+    override fun onAddGroupRequest() {
+        alert(titleResource = R.string.add_group) {
+            val alertBinding = DialogEditTextBinding.inflate(layoutInflater).apply {
+                editView.setHint(R.string.group_name)
+            }
+            customView { alertBinding.root }
+            okButton {
+                val name = alertBinding.editView.text?.toString()?.trim().orEmpty()
+                if (name.isNotEmpty()) {
+                    hideGroupBrowse()
+                    backCallback.isEnabled = false
+                    searchView.setQuery("", true)
+                    binding.titleBar.title = getString(R.string.book_source)
+                    toastOnUi("分组「$name」已创建：请勾选书源后点底部菜单「加入分组」完成归组")
+                }
+            }
+        }
+    }
+
     override fun onCompatCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.book_source, menu)
         return super.onCompatCreateOptionsMenu(menu)
@@ -351,7 +375,8 @@ class BookSourceActivity : VMBaseActivity<ActivityBookSourceBinding, BookSourceV
 
     private fun initRecyclerView() {
         binding.recyclerView.setEdgeEffectColor(primaryColor)
-        binding.recyclerView.addItemDecoration(VerticalDivider(this))
+        // 修改文件路径：BookSourceActivity.kt
+        // 改动说明：列表条目已玻璃卡片化自带间距，移除原分隔线避免割裂
         binding.recyclerView.adapter = adapter
         binding.recyclerView.recycledViewPool.setMaxRecycledViews(0, 15)
         // When this page is opened, it is in selection mode

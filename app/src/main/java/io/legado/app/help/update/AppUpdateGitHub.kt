@@ -26,11 +26,10 @@ object AppUpdateGitHub : AppUpdate.AppUpdateInterface {
         }
 
     private suspend fun getLatestRelease(): List<AppReleaseInfo> {
-        val lastReleaseUrl = if (checkVariant.isBeta()) {
-            "https://api.github.com/repos/luoyacheng/legado-E/releases/tags/beta"
-        } else {
-            "https://api.github.com/repos/luoyacheng/legado-E/releases/latest"
-        }
+        // 修改文件路径：app/src/main/java/io/legado/app/help/update/AppUpdateGitHub.kt
+        // 改动说明：检查更新改为用户自己的仓库 naisez666-boop/Legado-zz 的 GitHub Releases
+        val lastReleaseUrl =
+            "https://api.github.com/repos/naisez666-boop/Legado-zz/releases/latest"
         val res = okHttpClient.newCallResponse {
             url(lastReleaseUrl)
         }
@@ -53,8 +52,9 @@ object AppUpdateGitHub : AppUpdate.AppUpdateInterface {
         scope: CoroutineScope,
     ): Coroutine<AppUpdate.UpdateInfo> {
         return Coroutine.async(scope) {
+            // 修改文件路径：AppUpdateGitHub.kt
+            // 改动说明：用户仓库仅发布自用构建，不再按变体过滤，直接比较版本名
             getLatestRelease()
-                .filter { it.appVariant == checkVariant }
                 .firstOrNull { it.versionName > AppConst.appInfo.versionName }
                 ?.let {
                     return@async AppUpdate.UpdateInfo(

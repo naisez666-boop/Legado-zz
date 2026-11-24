@@ -13,7 +13,9 @@ data class AppReleaseInfo(
     val downloadUrl: String,
     val assetUrl: String
 ) {
-    val versionName: String = name.split("_").getOrNull(2)?.dropLast(2) ?: ""
+    // 修改文件路径：app/src/main/java/io/legado/app/help/update/AppReleaseInfo.kt
+    // 改动说明：版本名解析改为完整去掉 .apk 后缀（配合新版本名 3.年月日时.提交数）
+    val versionName: String = name.split("_").getOrNull(2)?.removeSuffix(".apk") ?: ""
 }
 
 enum class AppVariant {

@@ -157,10 +157,9 @@ class MyFragment() : BaseFragment(R.layout.fragment_my_config), MainFragmentInte
                     putExtra("configTag", ConfigTag.BACKUP_CONFIG)
                 }
 
-                "theme_setting" -> startActivity<ConfigActivity> {
-                    putExtra("configTag", ConfigTag.THEME_CONFIG)
-                }
-
+                // 修改文件路径：MyFragment.kt
+                // 改动说明：移除「主题设置」入口分支，原版自定义主题页面已删除，
+                // 亮暗切换统一走上方「主题模式」（跟随系统/亮色/暗色）
                 "fileManage" -> startActivity<FileManageActivity>()
                 "readRecord" -> startActivity<ReadRecordActivity>()
                 "about" -> startActivity<AboutActivity>()
