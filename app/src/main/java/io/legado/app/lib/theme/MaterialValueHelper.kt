@@ -21,28 +21,32 @@ import io.legado.app.utils.dpToPx
 
 @ColorInt
 fun Context.getPrimaryTextColor(dark: Boolean): Int {
+    // 修改说明：参数语义与原版保持一致——dark=true 表示背景为浅色，应显示深色文字；
+    // dark=false 表示背景为暗色，应显示浅色文字。全项目调用处均传 isLight/isColorLight，
+    // 上一轮误将返回值对调，导致白底白字、黑底黑字，此处恢复原版语义
     return if (dark) {
-        ContextCompat.getColor(this, R.color.md_light_primary_text)
-    } else {
         ContextCompat.getColor(this, R.color.md_dark_primary_text)
+    } else {
+        ContextCompat.getColor(this, R.color.md_light_primary_text)
     }
 }
 
 @ColorInt
 fun Context.getSecondaryTextColor(dark: Boolean): Int {
+    // 修改说明：与 getPrimaryTextColor 同语义（dark=true → 深色文字）
     return if (dark) {
-        ContextCompat.getColor(this, R.color.md_light_secondary)
-    } else {
         ContextCompat.getColor(this, R.color.md_dark_primary_text)
+    } else {
+        ContextCompat.getColor(this, R.color.md_light_secondary)
     }
 }
 
 @ColorInt
 fun Context.getPrimaryDisabledTextColor(dark: Boolean): Int {
     return if (dark) {
-        ContextCompat.getColor(this, R.color.md_light_disabled)
-    } else {
         ContextCompat.getColor(this, R.color.md_dark_disabled)
+    } else {
+        ContextCompat.getColor(this, R.color.md_light_disabled)
     }
 }
 
@@ -51,12 +55,12 @@ fun Context.getSecondaryDisabledTextColor(dark: Boolean): Int {
     return if (dark) {
         ContextCompat.getColor(
             this,
-            androidx.appcompat.R.color.secondary_text_disabled_material_light
+            androidx.appcompat.R.color.secondary_text_disabled_material_dark
         )
     } else {
         ContextCompat.getColor(
             this,
-            androidx.appcompat.R.color.secondary_text_disabled_material_dark
+            androidx.appcompat.R.color.secondary_text_disabled_material_light
         )
     }
 }
@@ -77,19 +81,21 @@ val Context.bottomBackground: Int
     get() = ContextCompat.getColor(this, R.color.background_card)
 
 val Context.primaryTextColor: Int
-    get() = getPrimaryTextColor(isDarkTheme)
+    // 修改说明：适配 getPrimaryTextColor 恢复后的参数语义（dark=true→深字）：
+    // 亮色模式(!isDarkTheme=true)显示深字，暗色模式显示浅字
+    get() = getPrimaryTextColor(!isDarkTheme)
 
 val Context.transparentNavBar: Boolean
     get() = ThemeStore.transparentNavBar(this)
 
 val Context.secondaryTextColor: Int
-    get() = getSecondaryTextColor(isDarkTheme)
+    get() = getSecondaryTextColor(!isDarkTheme)
 
 val Context.primaryDisabledTextColor: Int
-    get() = getPrimaryDisabledTextColor(isDarkTheme)
+    get() = getPrimaryDisabledTextColor(!isDarkTheme)
 
 val Context.secondaryDisabledTextColor: Int
-    get() = getSecondaryDisabledTextColor(isDarkTheme)
+    get() = getSecondaryDisabledTextColor(!isDarkTheme)
 
 val Fragment.primaryColor: Int
     get() = requireContext().primaryColor
@@ -107,16 +113,16 @@ val Fragment.bottomBackground: Int
     get() = requireContext().bottomBackground
 
 val Fragment.primaryTextColor: Int
-    get() = requireContext().getPrimaryTextColor(isDarkTheme)
+    get() = requireContext().getPrimaryTextColor(!isDarkTheme)
 
 val Fragment.secondaryTextColor: Int
-    get() = requireContext().getSecondaryTextColor(isDarkTheme)
+    get() = requireContext().getSecondaryTextColor(!isDarkTheme)
 
 val Fragment.primaryDisabledTextColor: Int
-    get() = requireContext().getPrimaryDisabledTextColor(isDarkTheme)
+    get() = requireContext().getPrimaryDisabledTextColor(!isDarkTheme)
 
 val Fragment.secondaryDisabledTextColor: Int
-    get() = requireContext().getSecondaryDisabledTextColor(isDarkTheme)
+    get() = requireContext().getSecondaryDisabledTextColor(!isDarkTheme)
 
 val Context.buttonDisabledColor: Int
     get() = if (isDarkTheme) {
