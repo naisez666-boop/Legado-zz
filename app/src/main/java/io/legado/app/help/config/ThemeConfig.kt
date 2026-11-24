@@ -389,40 +389,12 @@ object ThemeConfig {
     /**
      * 更新主题
      * 修改文件路径：app/src/main/java/io/legado/app/help/config/ThemeConfig.kt
-     * 改动说明：玻璃拟态主题接管全局配色——
-     * 不再读取旧版自定义配色(cPrimary等)，统一使用 colors.xml/values-night 中的
-     * 玻璃配色资源（primary/accent/background/background_card，自动跟随深浅色），
-     * 保留 E-Ink 墨水屏分支
+     * 改动说明：玻璃拟态主题下颜色全部由 MaterialValueHelper 实时解析资源获取，
+     * 不再把配色写入 ThemeStore 持久化缓存（旧逻辑会在亮暗切换瞬间缓存错模式的颜色，
+     * 导致一会暗一会亮、文字颜色错乱），此处不再需要应用任何颜色
      */
-    fun applyTheme(context: Context) = with(context) {
-        when {
-            AppConfig.isEInkMode -> {
-                ThemeStore.editTheme(this)
-                    .primaryColor(Color.WHITE)
-                    .accentColor(Color.BLACK)
-                    .backgroundColor(Color.WHITE)
-                    .bottomBackground(Color.WHITE)
-                    .transparentNavBar(false)
-                    .apply()
-            }
-
-            else -> {
-                // 修改说明：直接取玻璃配色资源（values-night 自动切换深浅色），保留半透明效果
-                val primary = getCompatColor(R.color.primary)
-                val accent = getCompatColor(R.color.accent)
-                val background = getCompatColor(R.color.background)
-                val bBackground = getCompatColor(R.color.background_card)
-                val transparentNavBar =
-                    getPrefBoolean(PreferKey.tNavBar, false)
-                ThemeStore.editTheme(this)
-                    .primaryColor(primary)
-                    .accentColor(accent)
-                    .backgroundColor(background)
-                    .bottomBackground(bBackground)
-                    .transparentNavBar(transparentNavBar)
-                    .apply()
-            }
-        }
+    fun applyTheme(context: Context) {
+        // 修改说明：空实现，保留入口以便日后扩展
     }
 
     fun clearBg(context: Context) {
